@@ -12,6 +12,8 @@ fi
 site=${1:---local}
 case "$site" in
   --local)
+    origin=http://localhost:18080
+    local_http=true
     address=http://localhost
     bind=127.0.0.1
     http_port=18080
@@ -30,6 +32,8 @@ case "$site" in
       *.*) ;;
       *) echo 'A public DNS hostname is required.' >&2; exit 1 ;;
     esac
+    origin=https://$site
+    local_http=false
     address=$site
     bind=0.0.0.0
     http_port=80
@@ -49,10 +53,12 @@ unset password
 chmod 644 .secrets/database_password .secrets/database_url
 cat > .env.pilot <<EOF
 SITE_ADDRESS=$address
+APP_ORIGIN=$origin
+ALLOW_LOCAL_HTTP=$local_http
 BIND_ADDRESS=$bind
 HTTP_PORT=$http_port
 HTTPS_PORT=$https_port
 ENABLE_PREVIEW=$preview
 EOF
-echo 'Created private configuration. This is a foundation preview, not the finished social pilot.'
+echo 'Created private configuration. Keep .env.pilot and .secrets private and backed up separately.'
 echo 'Start: docker compose --env-file .env.pilot -f compose.pilot.yaml up -d --build'

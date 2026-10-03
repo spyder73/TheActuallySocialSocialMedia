@@ -1,4 +1,4 @@
-# Foundation checkpoint: social/auth migration is not complete yet.
+# Invitation-only Go pilot. See docs/DEPLOY.md before exposing publicly.
 name: tassm-pilot
 
 x-logging: &logging
@@ -15,10 +15,15 @@ x-api: &api
   environment:
     DATABASE_URL_FILE: /run/secrets/database_url
     LISTEN_ADDR: :8080
+    APP_ORIGIN: ${APP_ORIGIN:?Set APP_ORIGIN to your exact public HTTPS origin}
+    ALLOW_LOCAL_HTTP: ${ALLOW_LOCAL_HTTP:-false}
   secrets:
     - database_url
   networks:
     - backend
+  mem_limit: 768m
+  cpus: 1.5
+  pids_limit: 128
   read_only: true
   security_opt:
     - no-new-privileges:true
@@ -28,6 +33,9 @@ x-api: &api
 
 services:
   postgres:
+    mem_limit: 1g
+    cpus: 1.5
+    pids_limit: 128
     image: postgres:16-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea
     environment:
       POSTGRES_USER: tassm
@@ -68,6 +76,9 @@ services:
     restart: unless-stopped
 
   web:
+    mem_limit: 128m
+    cpus: 0.5
+    pids_limit: 128
     image: tassm-web:local
     build:
       context: .
