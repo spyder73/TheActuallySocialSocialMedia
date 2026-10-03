@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { AuthProvider, useAuth } from "./auth/AuthContext.js";
 import LoginPage from "./pages/LoginPage.js";
@@ -9,6 +10,10 @@ import AiSettingsPage from "./pages/AiSettingsPage.js";
 import ProfilePage from "./pages/ProfilePage.js";
 import PostThreadPage from "./pages/PostThreadPage.js";
 
+const PreviewPage = import.meta.env.DEV || import.meta.env.VITE_ENABLE_PREVIEW === "true"
+  ? lazy(() => import("./preview/PreviewPage.js"))
+  : null;
+
 function RequireAuth({ children }: { children: JSX.Element }) {
   const { user, loading } = useAuth();
   if (loading) return <p className="p-8">Lädt…</p>;
@@ -19,6 +24,9 @@ function RequireAuth({ children }: { children: JSX.Element }) {
 function AppRoutes() {
   return (
     <Routes>
+      {PreviewPage && (
+        <Route path="/preview" element={<Suspense fallback={<p className="p-8">Vorschau wird geladen …</p>}><PreviewPage /></Suspense>} />
+      )}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route
