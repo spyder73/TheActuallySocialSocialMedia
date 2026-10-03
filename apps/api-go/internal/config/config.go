@@ -12,6 +12,8 @@ import (
 // Config contains process settings shared by the API and migration command.
 type Config struct {
 	DatabaseURL     string
+	AppOrigin       string
+	LocalHTTP       bool
 	HTTPAddr        string
 	ReadTimeout     time.Duration
 	WriteTimeout    time.Duration
@@ -51,6 +53,13 @@ func LoadFrom(lookup func(string) (string, bool)) (Config, error) {
 	}
 	if value, ok := lookup("MIGRATIONS_DIR"); ok {
 		c.MigrationsDir = value
+	}
+	c.AppOrigin, _ = lookup("APP_ORIGIN")
+	if local, ok := lookup("ALLOW_LOCAL_HTTP"); ok {
+		if local != "true" && local != "false" {
+			return Config{}, errors.New("ALLOW_LOCAL_HTTP must be true or false")
+		}
+		c.LocalHTTP = local == "true"
 	}
 	var err error
 	if c.ReadTimeout, err = duration(lookup, "HTTP_READ_TIMEOUT", c.ReadTimeout); err != nil {
