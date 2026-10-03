@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 type Pinger interface{ Ping(context.Context) error }
@@ -19,16 +20,21 @@ type Health struct {
 	logger *slog.Logger
 }
 
-func NewRouter(db Pinger, logger *slog.Logger) http.Handler {
+func NewRouter(db Pinger, logger *slog.Logger, configure ...func(chi.Router)) http.Handler {
 	if logger == nil {
 		logger = slog.Default()
 	}
 	h := Health{db: db, logger: logger}
 	r := chi.NewRouter()
 	r.Use(requestID)
+	r.Use(middleware.Recoverer)
+	r.Use(middleware.Timeout(15 * time.Second))
 	r.Use(accessLog(logger))
 	r.Get("/api/healthz", h.liveness)
 	r.Get("/api/readyz", h.readiness)
+	for _, mount := range configure {
+		mount(r)
+	}
 	return r
 }
 

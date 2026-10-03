@@ -11,9 +11,12 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/spyder73/TheActuallySocialSocialMedia/apps/api-go/internal/auth"
 	"github.com/spyder73/TheActuallySocialSocialMedia/apps/api-go/internal/config"
 	"github.com/spyder73/TheActuallySocialSocialMedia/apps/api-go/internal/httpapi"
+	"github.com/spyder73/TheActuallySocialSocialMedia/apps/api-go/internal/social"
 )
 
 func main() {
@@ -39,6 +42,9 @@ func run() error {
 	if err != nil {
 		return err
 	}
+	if err := config.ValidateOrigin(cfg.AppOrigin, cfg.LocalHTTP); err != nil {
+		return err
+	}
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelInfo}))
 	slog.SetDefault(logger)
 
@@ -50,8 +56,25 @@ func run() error {
 	}
 	defer pool.Close()
 
+	accounts := auth.New(pool, auth.Options{AllowedOrigins: []string{cfg.AppOrigin}, LocalHTTP: cfg.LocalHTTP})
+	router := httpapi.NewRouter(pool, logger, func(r chi.Router) {
+		r.Route("/api", func(api chi.Router) {
+			api.Use(auth.OriginMiddleware(cfg.AppOrigin))
+			api.Use(func(next http.Handler) http.Handler {
+				return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+					w.Header().Set("Cache-Control", "no-store")
+					next.ServeHTTP(w, r)
+				})
+			})
+			api.Mount("/auth", http.StripPrefix("/api", accounts.Handler()))
+			api.Group(func(protected chi.Router) {
+				protected.Use(accounts.Middleware)
+				social.New(pool).Register(protected, auth.UserID)
+			})
+		})
+	})
 	server := &http.Server{
-		Addr: cfg.HTTPAddr, Handler: httpapi.NewRouter(pool, logger),
+		Addr: cfg.HTTPAddr, Handler: router,
 		ReadHeaderTimeout: cfg.ReadTimeout, ReadTimeout: cfg.ReadTimeout,
 		WriteTimeout: cfg.WriteTimeout, IdleTimeout: cfg.IdleTimeout,
 	}
