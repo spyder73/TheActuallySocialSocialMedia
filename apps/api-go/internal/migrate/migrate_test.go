@@ -21,10 +21,13 @@ func TestEmbeddedBaselineMatchesPrismaSQL(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(got) != 4 {
-		t.Fatalf("got %d migrations, want 4", len(got))
+	if len(onlyBaseline(got)) != 4 || len(got) != 5 {
+		t.Fatalf("got %d migrations (%d baseline), want 5 (4 baseline)", len(got), len(onlyBaseline(got)))
 	}
 	for _, m := range got {
+		if !m.baseline {
+			continue
+		}
 		source := filepath.Join("..", "..", "..", "api", "prisma", "migrations", m.version, "migration.sql")
 		want, err := os.ReadFile(source)
 		if err != nil {
@@ -46,8 +49,8 @@ func TestLoadsPrismaDirectoryLayout(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(got) != 4 {
-		t.Fatalf("got %d Prisma migrations, want 4", len(got))
+	if len(onlyBaseline(got)) != 4 {
+		t.Fatalf("got %d Prisma migrations, want 4", len(onlyBaseline(got)))
 	}
 }
 
@@ -104,8 +107,8 @@ func TestMigrationIntegration(t *testing.T) {
 	if err := pool.QueryRow(ctx, `SELECT count(*) FROM "_tassm_go_migrations"`).Scan(&applied); err != nil {
 		t.Fatal(err)
 	}
-	if applied != 4 {
-		t.Fatalf("Go ledger has %d migrations, want 4", applied)
+	if applied != 5 {
+		t.Fatalf("Go ledger has %d migrations, want 5", applied)
 	}
 
 	changedDir := t.TempDir()
@@ -126,7 +129,10 @@ func TestMigrationIntegration(t *testing.T) {
 
 	// Simulate a database created by the existing Prisma runner: retain its
 	// schema, replace the Go ledger with verified Prisma ledger rows, then adopt.
-	if _, err := pool.Exec(ctx, `DROP TABLE "_tassm_go_migrations"; CREATE TABLE "_prisma_migrations" (
+	if _, err := pool.Exec(ctx, `DROP TABLE "AuthSession", "AccountToken";
+ DROP INDEX "User_email_lower_key", "User_username_lower_key";
+		ALTER TABLE "User" DROP CONSTRAINT "User_role_check", DROP COLUMN "role", DROP COLUMN "disabledAt";
+		DROP TABLE "_tassm_go_migrations"; CREATE TABLE "_prisma_migrations" (
 		migration_name TEXT NOT NULL, checksum TEXT NOT NULL, finished_at TIMESTAMPTZ, rolled_back_at TIMESTAMPTZ)`); err != nil {
 		t.Fatal(err)
 	}
@@ -134,7 +140,7 @@ func TestMigrationIntegration(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, m := range migrations {
+	for _, m := range onlyBaseline(migrations) {
 		if _, err := pool.Exec(ctx, `INSERT INTO "_prisma_migrations" (migration_name, checksum, finished_at) VALUES ($1, $2, now())`, m.version, m.checksum); err != nil {
 			t.Fatal(err)
 		}
@@ -145,8 +151,8 @@ func TestMigrationIntegration(t *testing.T) {
 	if err := pool.QueryRow(ctx, `SELECT count(*) FROM "_tassm_go_migrations"`).Scan(&applied); err != nil {
 		t.Fatal(err)
 	}
-	if applied != 4 {
-		t.Fatalf("adopted Go ledger has %d migrations, want 4", applied)
+	if applied != 5 {
+		t.Fatalf("adopted Go ledger has %d migrations, want 5", applied)
 	}
 
 	if _, err := pool.Exec(ctx, `DROP TABLE "_prisma_migrations"; DROP TABLE "_tassm_go_migrations"`); err != nil {
@@ -176,7 +182,14 @@ func copyMigrations(destination string) error {
 		return err
 	}
 	for _, m := range migrations {
-		if err := os.WriteFile(filepath.Join(dir, m.version+".sql"), []byte(m.sql), 0600); err != nil {
+		child := "go"
+		if m.baseline {
+			child = "prisma-baseline"
+		}
+		if err := os.MkdirAll(filepath.Join(destination, child), 0700); err != nil {
+			return err
+		}
+		if err := os.WriteFile(filepath.Join(destination, child, m.version+".sql"), []byte(m.sql), 0600); err != nil {
 			return err
 		}
 	}

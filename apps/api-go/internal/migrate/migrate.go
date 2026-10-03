@@ -21,8 +21,8 @@ import (
 // Prisma's original SQL is copied byte-for-byte into this module. The checksums
 // are compared with _prisma_migrations before an existing schema is adopted.
 //
-//go:embed migrations/prisma-baseline/*.sql
-var baseline embed.FS
+//go:embed migrations/**/*.sql
+var packaged embed.FS
 
 const ledger = `CREATE TABLE IF NOT EXISTS "_tassm_go_migrations" (
 	"version" TEXT PRIMARY KEY,
@@ -30,7 +30,10 @@ const ledger = `CREATE TABLE IF NOT EXISTS "_tassm_go_migrations" (
 	"applied_at" TIMESTAMPTZ NOT NULL DEFAULT now()
 )`
 
-type migration struct{ version, sql, checksum string }
+type migration struct {
+	version, sql, checksum string
+	baseline               bool
+}
 
 func Run(ctx context.Context, pool *pgxpool.Pool, migrationsDir string, logger *slog.Logger) error {
 	if logger == nil {
@@ -53,19 +56,20 @@ func Run(ctx context.Context, pool *pgxpool.Pool, migrationsDir string, logger *
 	}
 
 	if prismaExists {
-		if err := verifyPrismaLedger(ctx, pool, migrations); err != nil {
+		baselines := onlyBaseline(migrations)
+		if err := verifyPrismaLedger(ctx, pool, baselines); err != nil {
 			return err
 		}
 		if goLedgerExists {
-			if err := verifyGoLedger(ctx, pool, migrations, true); err != nil {
+			if err := verifyGoLedger(ctx, pool, migrations, false); err != nil {
 				return err
 			}
 		}
-		if err := adoptPrismaLedger(ctx, pool, migrations); err != nil {
+		if err := adoptPrismaLedger(ctx, pool, baselines); err != nil {
 			return err
 		}
-		logger.Info("verified and adopted existing Prisma migration history", "migrations", len(migrations))
-		return nil
+		logger.Info("verified and adopted existing Prisma migration history", "migrations", len(baselines))
+		return applyPending(ctx, pool, migrations, logger)
 	}
 	if !goLedgerExists {
 		var hasApplicationTables bool
@@ -121,8 +125,8 @@ func verifyGoLedger(ctx context.Context, pool *pgxpool.Pool, migrations []migrat
 }
 
 func loadMigrations(dir string) ([]migration, error) {
-	var source fs.FS = baseline
-	root := "migrations/prisma-baseline"
+	var source fs.FS = packaged
+	root := "migrations"
 	if dir != "" {
 		if st, err := os.Stat(dir); err != nil {
 			return nil, fmt.Errorf("MIGRATIONS_DIR: %w", err)
@@ -144,7 +148,14 @@ func loadMigrations(dir string) ([]migration, error) {
 	if err != nil {
 		return nil, fmt.Errorf("read migrations: %w", err)
 	}
-	sort.Strings(paths)
+	sort.Slice(paths, func(i, j int) bool {
+		a := strings.Contains(paths[i], "prisma-baseline") || filepath.Base(paths[i]) == "migration.sql"
+		b := strings.Contains(paths[j], "prisma-baseline") || filepath.Base(paths[j]) == "migration.sql"
+		if a != b {
+			return a
+		}
+		return migrationVersionForPath(paths[i]) < migrationVersionForPath(paths[j])
+	})
 	result := make([]migration, 0, len(paths))
 	for _, path := range paths {
 		contents, err := fs.ReadFile(source, path)
@@ -159,14 +170,34 @@ func loadMigrations(dir string) ([]migration, error) {
 			return nil, fmt.Errorf("invalid migration filename %q", path)
 		}
 		sum := sha256.Sum256(contents)
-		result = append(result, migration{version: version, sql: string(contents), checksum: hex.EncodeToString(sum[:])})
+		result = append(result, migration{version: version, sql: string(contents), checksum: hex.EncodeToString(sum[:]), baseline: strings.Contains(path, "prisma-baseline") || filepath.Base(path) == "migration.sql"})
 	}
-	for i := 1; i < len(result); i++ {
-		if result[i-1].version == result[i].version {
-			return nil, fmt.Errorf("duplicate migration version %q", result[i].version)
+	seenVersions := make(map[string]struct{}, len(result))
+	for _, m := range result {
+		if _, exists := seenVersions[m.version]; exists {
+			return nil, fmt.Errorf("duplicate migration version %q", m.version)
 		}
+		seenVersions[m.version] = struct{}{}
 	}
 	return result, nil
+}
+
+func migrationVersionForPath(path string) string {
+	base := filepath.Base(path)
+	if base == "migration.sql" {
+		return filepath.Base(filepath.Dir(path))
+	}
+	return strings.TrimSuffix(base, ".sql")
+}
+
+func onlyBaseline(migrations []migration) []migration {
+	result := make([]migration, 0, len(migrations))
+	for _, m := range migrations {
+		if m.baseline {
+			result = append(result, m)
+		}
+	}
+	return result
 }
 
 func verifyPrismaLedger(ctx context.Context, pool *pgxpool.Pool, migrations []migration) error {
