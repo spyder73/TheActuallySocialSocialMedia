@@ -115,7 +115,7 @@ For non-local deployments, generate independent secrets (for example, run `opens
 
 ## Usage
 
-After starting the app: register at `/register`, log in, post, follow other users (input field in the feed), and configure your own FactCheck/Explain/Ask AI provider under "FactCheck-KI" (e.g. a local Ollama instance at `http://localhost:11434/v1`).
+After starting the app: register at `/register`, log in, post, follow other users (input field in the feed), and configure your own FactCheck/Explain/Ask AI provider under "FactCheck AI" (e.g. a local Ollama instance at `http://localhost:11434/v1`).
 
 ## Tests, Typecheck & Build
 

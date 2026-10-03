@@ -85,7 +85,7 @@ export default function ProfilePage() {
       setEditing(false);
       await queryClient.invalidateQueries({ queryKey: ["profile", username] });
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Speichern fehlgeschlagen");
+      setError(err instanceof ApiError ? err.message : "Could not save");
     } finally {
       setSaving(false);
     }
@@ -126,7 +126,7 @@ export default function ProfilePage() {
   }
 
   async function toggleBlock() {
-    if (!confirm(isBlocked ? "Entblocken?" : "Diesen Nutzer wirklich blockieren?")) return;
+    if (!confirm(isBlocked ? "Unblock this user?" : "Really block this user?")) return;
     const method = isBlocked ? "DELETE" : "POST";
     await apiFetch(`/users/${username}/block`, { method });
     setIsBlocked(!isBlocked);
@@ -134,7 +134,7 @@ export default function ProfilePage() {
   }
 
   async function submitReport() {
-    const reason = prompt("Warum meldest du dieses Profil?");
+    const reason = prompt("Why are you reporting this profile?");
     if (!reason) return;
     await apiFetch("/reports", {
       method: "POST",
@@ -144,7 +144,7 @@ export default function ProfilePage() {
         reason,
       }),
     });
-    alert("Meldung gesendet. Danke.");
+    alert("Report submitted. Thank you.");
   }
 
   function onPostDeleted(postId: string) {
@@ -155,9 +155,9 @@ export default function ProfilePage() {
 
   return (
     <div className="mx-auto max-w-lg px-4 py-8">
-      <PageHeader title="Profil" />
+      <PageHeader title="Profile" />
       <NavBar />
-      {profileQuery.isLoading && <p className="text-sm text-gray-500">Lädt…</p>}
+      {profileQuery.isLoading && <p className="text-sm text-gray-500">Loading…</p>}
       {profile && (
         <>
           <div className={`${card} mb-6 flex items-start gap-4`}>
@@ -174,12 +174,12 @@ export default function ProfilePage() {
                 </h1>
                 {profile.isMe ? (
                   <button onClick={startEditing} className={btnSecondary}>
-                    Profil bearbeiten
+                    Edit profile
                   </button>
                 ) : (
                   <div className="flex gap-2">
                     <button onClick={() => void toggleFollow()} className={btnSecondary}>
-                      {profile.isFollowedByMe ? "Entfolgen" : "Folgen"}
+                      {profile.isFollowedByMe ? "Unfollow" : "Follow"}
                     </button>
                     <button
                       onClick={() => void toggleCloseFriend()}
@@ -199,10 +199,10 @@ export default function ProfilePage() {
               {!profile.isMe && (
                 <div className="mt-2 flex gap-3 text-xs text-gray-400">
                   <button onClick={() => void toggleBlock()} className="hover:underline">
-                    {isBlocked ? "Entblocken" : "Blockieren"}
+                    {isBlocked ? "Unblock" : "Block"}
                   </button>
                   <button onClick={() => void submitReport()} className="hover:underline">
-                    Melden
+                    Report
                   </button>
                 </div>
               )}
@@ -212,7 +212,7 @@ export default function ProfilePage() {
                     onClick={() => fileInputRef.current?.click()}
                     className="mt-2 text-xs text-gray-500 hover:underline"
                   >
-                    Profilbild ändern
+                    Change profile picture
                   </button>
                   <input
                     ref={fileInputRef}
@@ -231,7 +231,7 @@ export default function ProfilePage() {
               <input
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                placeholder="Anzeigename"
+                placeholder="Display name"
                 className={input}
               />
               <textarea
@@ -244,10 +244,10 @@ export default function ProfilePage() {
               {error && <p className="text-xs text-red-600">{error}</p>}
               <div className="flex justify-end gap-2">
                 <button onClick={() => setEditing(false)} className={btnSecondary}>
-                  Abbrechen
+                  Cancel
                 </button>
                 <button onClick={() => void saveProfile()} disabled={saving} className={btnPrimary}>
-                  Speichern
+                  Save
                 </button>
               </div>
             </div>
@@ -263,7 +263,7 @@ export default function ProfilePage() {
               />
             ))}
             {posts.length === 0 && postsLoaded && (
-              <p className="text-sm text-gray-400">Noch keine Posts.</p>
+              <p className="text-sm text-gray-400">No posts yet.</p>
             )}
           </div>
 
@@ -272,7 +272,7 @@ export default function ProfilePage() {
               onClick={() => void loadMorePosts()}
               className="mt-4 w-full rounded border py-2 text-sm"
             >
-              Weitere Beiträge laden
+              Load more posts
             </button>
           )}
         </>

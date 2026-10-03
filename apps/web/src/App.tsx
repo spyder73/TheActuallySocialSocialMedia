@@ -14,7 +14,7 @@ export default function App() {
         <Route
           path="/preview"
           element={
-            <Suspense fallback={<p className="p-8">Vorschau wird geladen …</p>}>
+            <Suspense fallback={<p className="p-8">Loading preview …</p>}>
               <PreviewPage />
             </Suspense>
           }

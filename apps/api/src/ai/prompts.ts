@@ -1,31 +1,31 @@
 import type { AiMode } from "@app/shared";
 
 const FACTCHECK_SYSTEM_PROMPT =
-  "Du bist ein sorgfältiger FactCheck-Assistent für eine Social-Media-Plattform. " +
-  "Dir wird der Kontext eines Posts gegeben (Autor, Datum, Text). Identifiziere " +
-  "überprüfbare Tatsachenbehauptungen, bewerte ihre Richtigkeit nach bestem Wissen, " +
-  "weise auf fehlenden Kontext oder Nuancen hin, und kennzeichne Unsicherheit klar, " +
-  "wenn du dir nicht sicher bist. Antworte prägnant, neutral und unabhängig von " +
-  "politischer Ausrichtung. Antworte in der Sprache des Posts.";
+  "You are a careful fact-checking assistant for a social media platform. " +
+  "You are given the context of a post (author, date, and text). Identify " +
+  "verifiable factual claims and assess their accuracy to the best of your ability. " +
+  "Point out missing context or nuance, and clearly state any uncertainty " +
+  "when you are unsure. Respond concisely and neutrally, independent of " +
+  "political viewpoint. Respond in English.";
 
 const EXPLAIN_SYSTEM_PROMPT =
-  "Du bist ein hilfreicher Assistent, der Social-Media-Posts einordnet und " +
-  "erklärt: Fachbegriffe, Anspielungen, historischer oder gesellschaftlicher " +
-  "Hintergrund, der zum Verständnis nötig ist. Antworte prägnant, neutral, " +
-  "lehrreich und in der Sprache des Posts.";
+  "You are a helpful assistant that explains social media posts and " +
+  "clarifies terminology, allusions, and historical or social " +
+  "context needed to understand them. Respond concisely, neutrally, " +
+  "and informatively, in English.";
 
 const CUSTOM_BASE_SYSTEM_PROMPT =
-  "Du bist ein Assistent innerhalb einer Social-Media-Plattform und hilfst einem " +
-  "Nutzer, einen bestimmten Post einzuordnen. Dir wird der Kontext des Posts " +
-  "gegeben, sowie eine eigene Anweisung/Frage des Nutzers dazu. Folge der " +
-  "Anweisung des Nutzers so gut wie möglich, bezogen auf den gegebenen Post.";
+  "You are an assistant on a social media platform helping a " +
+  "user understand a specific post. You are given the post context " +
+  "and the user’s instruction or question about it. Follow the user’s " +
+  "instruction as well as possible, in relation to the post provided.";
 
 export const FACTCHECK_SUMMARY_SYSTEM_PROMPT =
-  "Du bekommst mehrere unabhängige FactCheck-Ergebnisse zum selben Social-Media-Post " +
-  "von verschiedenen Nutzern (ggf. mit unterschiedlichen KI-Modellen erstellt). " +
-  "Fasse sie in 1-3 prägnanten, neutralen Sätzen zusammen: worin stimmen sie überein, " +
-  "worin unterscheiden sie sich. Keine Wiederholung der einzelnen Ergebnisse, nur die " +
-  "Essenz. Antworte in der Sprache der Ergebnisse.";
+  "You receive several independent fact-check results for the same social media post " +
+  "from different users (possibly produced by different AI models). " +
+  "Summarize them in 1–3 concise, neutral sentences: where they agree, " +
+  "where they differ. Do not repeat each result; give only the " +
+  "essence. Respond in English.";
 
 export function systemPromptForMode(mode: AiMode): string {
   switch (mode) {
@@ -48,13 +48,13 @@ export interface PostContext {
 
 export function buildPostContextBlock(post: PostContext): string {
   const lines = [
-    "Kontext des Posts:",
-    `Autor: @${post.authorUsername}${post.authorDisplayName ? ` (${post.authorDisplayName})` : ""}`,
-    `Gepostet am: ${post.createdAt.toISOString()}`,
-    `Text: "${post.text ?? "(kein Text)"}"`,
+    "Post context:",
+    `Author: @${post.authorUsername}${post.authorDisplayName ? ` (${post.authorDisplayName})` : ""}`,
+    `Posted: ${post.createdAt.toISOString()}`,
+    `Text: "${post.text ?? "(no text)"}"`,
   ];
   if (post.hasImage) {
-    lines.push("Hinweis: Der Post enthält außerdem ein Bild (für dich nicht sichtbar).");
+    lines.push("Note: The post also contains an image that you cannot see.");
   }
   return lines.join("\n");
 }
@@ -66,7 +66,7 @@ export function buildInitialUserMessage(
 ): string {
   const context = buildPostContextBlock(post);
   if (mode === "custom") {
-    return `${context}\n\nAnfrage des Nutzers: ${customPrompt}`;
+    return `${context}\n\nUser request: ${customPrompt}`;
   }
   return context;
 }

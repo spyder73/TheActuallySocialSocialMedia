@@ -109,7 +109,7 @@ export default function FeedPage() {
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Was gibt's Neues?"
+          placeholder="What’s new?"
           className={`${input} resize-none`}
           rows={3}
         />
@@ -127,15 +127,15 @@ export default function FeedPage() {
               onClick={() => fileInputRef.current?.click()}
               className={btnSecondary}
             >
-              {imageKey ? "Bild ändern" : "Bild hinzufügen"}
+              {imageKey ? "Change image" : "Add image"}
             </button>
             <select
               value={visibility}
               onChange={(e) => setVisibility(e.target.value as PostVisibility)}
               className={`${input} py-1.5`}
             >
-              <option value="public">Öffentlich</option>
-              <option value="close_friends">Nur enge Freunde</option>
+              <option value="public">Public</option>
+              <option value="close_friends">Close friends only</option>
             </select>
           </div>
           <input
@@ -153,7 +153,7 @@ export default function FeedPage() {
 
       <StoriesBar />
 
-      {firstPageQuery.isLoading && <p className="text-sm text-gray-500">Lädt…</p>}
+      {firstPageQuery.isLoading && <p className="text-sm text-gray-500">Loading…</p>}
 
       <div className="flex flex-col gap-3">
         {allPages.map((page, pageIdx) =>
@@ -167,7 +167,7 @@ export default function FeedPage() {
                 {showBoundary && (
                   <div className="my-4 flex items-center gap-2 text-center text-sm text-gray-400">
                     <span className="h-px flex-1 bg-gray-200" />
-                    <span>✓ Du bist auf dem neuesten Stand</span>
+                    <span>✓ You’re all caught up</span>
                     <span className="h-px flex-1 bg-gray-200" />
                   </div>
                 )}
@@ -185,13 +185,13 @@ export default function FeedPage() {
 
       {lastPage?.nextCursor && (
         <button onClick={() => void loadMore()} className={`${btnSecondary} mt-4 w-full`}>
-          Weitere Beiträge laden
+          Load more posts
         </button>
       )}
 
       {!lastPage?.nextCursor && allPages.length > 0 && (
         <p className="mt-6 text-center text-sm text-gray-400">
-          Das war's – keine weiteren Beiträge.
+          That’s all — there are no more posts.
         </p>
       )}
     </div>

@@ -83,7 +83,7 @@ export default function SnapsPage() {
       await apiFetch(`/snaps/${snap.id}/view`, { method: "POST" });
       await queryClient.invalidateQueries({ queryKey: ["snaps-inbox"] });
     } catch {
-      setSnapError("Snap konnte nicht geladen werden. Bitte versuche es erneut.");
+      setSnapError("Could not load the snap. Please try again.");
     }
   }
 
@@ -99,7 +99,7 @@ export default function SnapsPage() {
       <NavBar />
 
       <div className={`${card} mb-6`}>
-        <p className="mb-3 text-sm font-medium text-gray-700">An wen?</p>
+        <p className="mb-3 text-sm font-medium text-gray-700">To whom?</p>
         <div className="mb-4 flex flex-wrap gap-2">
           {following.map((u) => {
             const isSelected = selectedRecipients.includes(u.username);
@@ -117,23 +117,23 @@ export default function SnapsPage() {
             );
           })}
           {following.length === 0 && (
-            <p className="text-xs text-gray-400">Folge jemandem, um ihm Snaps zu senden.</p>
+            <p className="text-xs text-gray-400">Follow someone to send them snaps.</p>
           )}
         </div>
         <input
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Text hinzufügen (optional)"
+          placeholder="Add text (optional)"
           className="mb-3 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
         />
         <div className="flex justify-center">
           <button
             onClick={() => fileInputRef.current?.click()}
             disabled={sending || selectedRecipients.length === 0}
-            title="Snap aufnehmen und senden"
+            title="Capture and send snap"
             className="flex h-16 w-16 items-center justify-center rounded-full border-4 border-gray-200 bg-[#FFFC00] text-xs font-semibold text-black shadow-md transition hover:scale-105 disabled:opacity-40 disabled:hover:scale-100"
           >
-            {sending ? "…" : "Senden"}
+            {sending ? "…" : "Send"}
           </button>
         </div>
         <input
@@ -166,13 +166,13 @@ export default function SnapsPage() {
                 @{snap.sender.username}
               </p>
               <p className="text-xs text-gray-400">
-                {snap.viewedAt ? "Geöffnet" : "Neuer Snap"}
+                {snap.viewedAt ? "Opened" : "New snap"}
               </p>
             </div>
           </button>
         ))}
         {snaps.length === 0 && (
-          <p className="text-sm text-gray-400">Keine neuen Snaps.</p>
+          <p className="text-sm text-gray-400">No new snaps.</p>
         )}
       </div>
 

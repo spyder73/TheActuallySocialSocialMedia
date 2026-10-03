@@ -17,7 +17,7 @@ export default function NavBar() {
           Snaps
         </NavLink>
         <NavLink to="/dms" className={primaryLinkClass}>
-          Nachrichten
+          Messages
         </NavLink>
       </div>
       <NavLink to="/settings/ai" className={secondaryLinkClass}>

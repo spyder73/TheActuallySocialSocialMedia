@@ -25,13 +25,13 @@ function Avatar({ initials, tone, small = false }: { initials: string; tone: str
 
 function PostCard({ post, selected, onSelect }: { post: PreviewPost; selected: boolean; onSelect: () => void }) {
   return <article className={`pv-post${selected ? " is-selected" : ""}`}>
-    <button className="pv-post-main" onClick={onSelect} aria-label={`Notiz von ${post.author} öffnen`} aria-pressed={selected}>
+    <button className="pv-post-main" onClick={onSelect} aria-label={`Open note by ${post.author}`} aria-pressed={selected}>
       <Avatar initials={post.initials} tone={post.tone} />
       <span className="pv-post-copy">
         <span className="pv-post-meta"><strong>{post.author}</strong><span>@{post.handle}</span><span className="pv-meta-dot">·</span><time>{post.time}</time></span>
         <span className="pv-topic">{post.topic}</span>
         <span className="pv-post-text">{post.text}</span>
-        <span className="pv-post-foot"><span><Icon name="reply" size={16}/>{post.replies} Antworten</span><span className="pv-evidence-count"><Icon name="link" size={15}/>{post.evidence.length} {post.evidence.length === 1 ? "Quelle" : "Quellen"}</span></span>
+        <span className="pv-post-foot"><span><Icon name="reply" size={16}/>{post.replies} replies</span><span className="pv-evidence-count"><Icon name="link" size={15}/>{post.evidence.length} {post.evidence.length === 1 ? "source" : "sources"}</span></span>
       </span>
       <span className="pv-post-chevron"><Icon name="chevron" size={17}/></span>
     </button>
@@ -40,12 +40,12 @@ function PostCard({ post, selected, onSelect }: { post: PreviewPost; selected: b
 
 function EvidenceCard({ item, selected, onClick }: { item: Evidence; selected: boolean; onClick: () => void }) {
   return <button className={`pv-evidence-card${selected ? " is-current" : ""}`} onClick={onClick} aria-pressed={selected}>
-    <span className="pv-evidence-kind">{{ "Primary source": "Primärquelle", Context: "Kontext", Perspective: "Perspektive" }[item.kind]}</span><strong>{item.title}</strong><span className="pv-evidence-source">{item.source}</span>
+    <span className="pv-evidence-kind">{{ "Primary source": "Primary source", Context: "Context", Perspective: "Perspective" }[item.kind]}</span><strong>{item.title}</strong><span className="pv-evidence-source">{item.source}</span>
   </button>;
 }
 
 function EvidenceDetails({ item }: { item: Evidence }) {
-  return <div className="pv-evidence-detail"><p className="pv-eyebrow">EINORDNUNG · {item.version}</p><dl><dt>Behauptung</dt><dd>{item.claim}</dd><dt>Befund</dt><dd className="pv-finding">{item.finding}</dd><dt>Quellenpassage · {item.date}</dt><dd>{item.passage}</dd><dt>Gegenbelege</dt><dd>{item.contrary}</dd><dt>Grenzen</dt><dd>{item.limitations}</dd></dl><span><Icon name="link" size={14}/>{item.source}</span></div>;
+  return <div className="pv-evidence-detail"><p className="pv-eyebrow">CONTEXT · {item.version}</p><dl><dt>Claim</dt><dd>{item.claim}</dd><dt>Finding</dt><dd className="pv-finding">{item.finding}</dd><dt>Source excerpt · {item.date}</dt><dd>{item.passage}</dd><dt>Counter-evidence</dt><dd>{item.contrary}</dd><dt>Limitations</dt><dd>{item.limitations}</dd></dl><span><Icon name="link" size={14}/>{item.source}</span></div>;
 }
 
 export default function PreviewPage() {
@@ -103,48 +103,48 @@ export default function PreviewPage() {
     event.preventDefault();
     const text = composerText.trim();
     if (!text) return;
-    const post: PreviewPost = { id: `local-${Date.now()}`, author: "Du", handle: "du", initials: "DU", tone: "blue", time: "gerade eben", topic: "DEINE NOTIZ", text, replies: 0, evidence: [] };
+    const post: PreviewPost = { id: `local-${Date.now()}`, author: "You", handle: "you", initials: "YO", tone: "blue", time: "just now", topic: "YOUR NOTE", text, replies: 0, evidence: [] };
     setPosts((previous) => [post, ...previous]); setSelectedId(post.id); setSelectedEvidenceId(""); setQuietMode(false); setComposerText(""); setComposeOpen(false);
   }
 
   return <div className="pv-app" data-theme={theme}>
     <div className="pv-frame">
-      <aside className="pv-sidebar" aria-label="Hauptnavigation">
-        <a className="pv-brand" href="#feed" aria-label="TASSM Startseite"><span className="pv-brand-mark"><Icon name="leaf" size={19}/></span><span>TASSM</span></a>
-        <div className="pv-demo-mark"><span className="pv-live-dot"/> Vorschau <span>·</span> Demo</div>
+      <aside className="pv-sidebar" aria-label="Main navigation">
+        <a className="pv-brand" href="#feed" aria-label="TASSM home"><span className="pv-brand-mark"><Icon name="leaf" size={19}/></span><span>TASSM</span></a>
+        <div className="pv-demo-mark"><span className="pv-live-dot"/> Preview <span>·</span> Demo</div>
         <nav className="pv-primary-nav">
-          <a href="#feed" className="active"><Icon name="home"/> <span>Chronologischer Feed</span></a>
-          <button onClick={openSources}><Icon name="bookmark"/><span>Quellen ansehen</span></button>
+          <a href="#feed" className="active"><Icon name="home"/> <span>Chronological feed</span></a>
+          <button onClick={openSources}><Icon name="bookmark"/><span>View sources</span></button>
         </nav>
-        <div className="pv-sidebar-rule"/><div className="pv-sidebar-note"><Icon name="spark" size={16}/><p>Ein kleiner, privater Ort für Austausch und sorgfältige Einordnung.</p></div>
-        <div className="pv-sidebar-bottom"><div className="pv-profile-link"><span className="pv-user-avatar">DE</span><span><strong>Demo-Konto</strong><small>Actually Social</small></span></div></div>
+        <div className="pv-sidebar-rule"/><div className="pv-sidebar-note"><Icon name="spark" size={16}/><p>A small, private place for thoughtful conversation and context.</p></div>
+        <div className="pv-sidebar-bottom"><div className="pv-profile-link"><span className="pv-user-avatar">DE</span><span><strong>Demo account</strong><small>Actually Social</small></span></div></div>
       </aside>
 
       <main id="feed" className="pv-main">
-        <header className="pv-mobile-header"><a className="pv-brand" href="#feed"><span className="pv-brand-mark"><Icon name="leaf" size={18}/></span><span>TASSM</span></a><button className="pv-icon-button" aria-label="Quellen öffnen" onClick={() => setMobileEvidenceOpen(true)}><Icon name="bookmark"/></button></header>
-        <div className="pv-feed-head"><div><p className="pv-eyebrow">TASSM-VORSCHAU <span>·</span> ACTUALLY SOCIAL</p><h1>Der Leseraum</h1><p className="pv-subtitle">Gedanken zum Weiterdenken. Quellen zum Nachlesen.</p></div><div className="pv-head-actions"><button className="pv-theme-button" aria-label="Farbschema ändern" title={`Farbschema: ${{ system: "System", light: "Hell", dark: "Dunkel" }[theme]}`} onClick={() => setTheme(theme === "dark" ? "light" : theme === "light" ? "system" : "dark")}><Icon name={theme === "dark" ? "moon" : theme === "light" ? "sun" : "monitor"}/><span>{{ system: "System", light: "Hell", dark: "Dunkel" }[theme]}</span></button><button className="pv-compose-button" onClick={() => setComposeOpen(true)}><Icon name="plus" size={17}/><span>Notiz schreiben</span></button></div></div>
-        <div className="pv-feed-toolbar"><div className="pv-filter-tabs"><button className={!quietMode ? "active" : ""} onClick={() => setQuietMode(false)}>Demo-Beiträge <span>{String(posts.length).padStart(2, "0")}</span></button><button className={quietMode ? "active" : ""} onClick={() => setQuietMode(true)}>Leerer Zustand</button></div><span className="pv-sort-label">Chronologische Reihenfolge</span></div>
-        <section className="pv-feed" aria-label="Notizen aus dem Netzwerk">
-          {visiblePosts.length ? visiblePosts.map((post) => <PostCard key={post.id} post={post} selected={post.id === selectedId} onSelect={() => selectPost(post)}/>) : <div className="pv-empty"><span className="pv-empty-icon"><Icon name="leaf" size={23}/></span><p className="pv-eyebrow">EIN MOMENT DER RUHE</p><h2>Hier ist es gerade still.</h2><p>In einem kleinen Netzwerk gibt es nicht immer Neues. Du kannst die erste Notiz schreiben.</p><button className="pv-compose-button" onClick={() => setComposeOpen(true)}><Icon name="plus" size={16}/> Erste Notiz schreiben</button></div>}
-          {visiblePosts.length > 0 && <div className="pv-feed-end"><span/><p>Du bist auf dem neuesten Stand</p><span/></div>}
+        <header className="pv-mobile-header"><a className="pv-brand" href="#feed"><span className="pv-brand-mark"><Icon name="leaf" size={18}/></span><span>TASSM</span></a><button className="pv-icon-button" aria-label="Open sources" onClick={() => setMobileEvidenceOpen(true)}><Icon name="bookmark"/></button></header>
+        <div className="pv-feed-head"><div><p className="pv-eyebrow">TASSM PREVIEW <span>·</span> ACTUALLY SOCIAL</p><h1>The Reading Room</h1><p className="pv-subtitle">Ideas to think about. Sources to explore.</p></div><div className="pv-head-actions"><button className="pv-theme-button" aria-label="Change colour theme" title={`Colour theme: ${{ system: "System", light: "Light", dark: "Dark" }[theme]}`} onClick={() => setTheme(theme === "dark" ? "light" : theme === "light" ? "system" : "dark")}><Icon name={theme === "dark" ? "moon" : theme === "light" ? "sun" : "monitor"}/><span>{{ system: "System", light: "Light", dark: "Dark" }[theme]}</span></button><button className="pv-compose-button" onClick={() => setComposeOpen(true)}><Icon name="plus" size={17}/><span>Write a note</span></button></div></div>
+        <div className="pv-feed-toolbar"><div className="pv-filter-tabs"><button className={!quietMode ? "active" : ""} onClick={() => setQuietMode(false)}>Demo posts <span>{String(posts.length).padStart(2, "0")}</span></button><button className={quietMode ? "active" : ""} onClick={() => setQuietMode(true)}>Empty state</button></div><span className="pv-sort-label">Chronological order</span></div>
+        <section className="pv-feed" aria-label="Notes from your network">
+          {visiblePosts.length ? visiblePosts.map((post) => <PostCard key={post.id} post={post} selected={post.id === selectedId} onSelect={() => selectPost(post)}/>) : <div className="pv-empty"><span className="pv-empty-icon"><Icon name="leaf" size={23}/></span><p className="pv-eyebrow">A MOMENT OF CALM</p><h2>It’s quiet here for now.</h2><p>A small network is not always busy. You can write the first note.</p><button className="pv-compose-button" onClick={() => setComposeOpen(true)}><Icon name="plus" size={16}/> Write the first note</button></div>}
+          {visiblePosts.length > 0 && <div className="pv-feed-end"><span/><p>You’re all caught up</p><span/></div>}
         </section>
-        <footer className="pv-mobile-nav" aria-label="Hauptnavigation"><button className="active" aria-label="Chronologischer Feed"><Icon name="home"/></button><button aria-label="Quellen ansehen" onClick={openSources}><Icon name="bookmark"/></button><button className="pv-mobile-add" aria-label="Notiz schreiben" onClick={() => setComposeOpen(true)}><Icon name="plus"/></button><button aria-label={quietMode ? "Demo-Beiträge anzeigen" : "Leeren Zustand ansehen"} aria-pressed={quietMode} onClick={() => setQuietMode((current) => !current)}><Icon name="leaf"/></button><button aria-label="Farbschema ändern" onClick={() => setTheme(theme === "dark" ? "light" : theme === "light" ? "system" : "dark")}><Icon name={theme === "dark" ? "moon" : theme === "light" ? "sun" : "monitor"}/></button></footer>
+        <footer className="pv-mobile-nav" aria-label="Main navigation"><button className="active" aria-label="Chronological feed"><Icon name="home"/></button><button aria-label="View sources" onClick={openSources}><Icon name="bookmark"/></button><button className="pv-mobile-add" aria-label="Write a note" onClick={() => setComposeOpen(true)}><Icon name="plus"/></button><button aria-label={quietMode ? "Show demo posts" : "View empty state"} aria-pressed={quietMode} onClick={() => setQuietMode((current) => !current)}><Icon name="leaf"/></button><button aria-label="Change colour theme" onClick={() => setTheme(theme === "dark" ? "light" : theme === "light" ? "system" : "dark")}><Icon name={theme === "dark" ? "moon" : theme === "light" ? "sun" : "monitor"}/></button></footer>
       </main>
 
-      <aside className="pv-context" aria-label="Notiz und Quellen">
-        <div className="pv-context-top"><div><p className="pv-eyebrow">ZUR NOTIZ</p><h2 id="pv-context-title" tabIndex={-1}>{selectedPost ? "Einordnung" : "Quellen"}</h2></div><span className="pv-context-count">{selectedPost?.evidence.length ?? 0} Quellen</span></div>
+      <aside className="pv-context" aria-label="Note and sources">
+        <div className="pv-context-top"><div><p className="pv-eyebrow">ABOUT THIS NOTE</p><h2 id="pv-context-title" tabIndex={-1}>{selectedPost ? "Context" : "Sources"}</h2></div><span className="pv-context-count">{selectedPost?.evidence.length ?? 0} sources</span></div>
         {selectedPost ? <>
           <div className="pv-selected-post"><div className="pv-selected-author"><Avatar initials={selectedPost.initials} tone={selectedPost.tone} small/><span><strong>{selectedPost.author}</strong><small>@{selectedPost.handle}</small></span></div><p>{selectedPost.text}</p></div>
-          <div className="pv-context-divider"><span>BEIGEFÜGTE QUELLEN</span><span>IN DIESER NOTIZ</span></div>
-          {selectedPost.evidence.length ? <div className="pv-evidence-list">{selectedPost.evidence.map((item) => <EvidenceCard key={item.id} item={item} selected={item.id === (selectedEvidence?.id ?? "")} onClick={() => setSelectedEvidenceId(item.id)}/>)}</div> : <div className="pv-no-sources"><Icon name="bookmark" size={17}/><p>Noch keine Quellen</p><span>Diese Demo-Notiz enthält keine Quellen.</span></div>}
+          <div className="pv-context-divider"><span>ATTACHED SOURCES</span><span>IN THIS NOTE</span></div>
+          {selectedPost.evidence.length ? <div className="pv-evidence-list">{selectedPost.evidence.map((item) => <EvidenceCard key={item.id} item={item} selected={item.id === (selectedEvidence?.id ?? "")} onClick={() => setSelectedEvidenceId(item.id)}/>)}</div> : <div className="pv-no-sources"><Icon name="bookmark" size={17}/><p>No sources yet</p><span>This demo note has no sources.</span></div>}
           {selectedEvidence && <EvidenceDetails item={selectedEvidence}/>}
-        </> : <div className="pv-no-sources"><Icon name="bookmark" size={17}/><p>Wähle eine Notiz aus.</p><span>Quellen und Einordnung erscheinen hier.</span></div>}
-        <div className="pv-context-note"><Icon name="spark" size={15}/><span>Quellen dienen der Einordnung. Sie sind kein Urteil.</span></div>
+        </> : <div className="pv-no-sources"><Icon name="bookmark" size={17}/><p>Select a note.</p><span>Sources and context appear here.</span></div>}
+        <div className="pv-context-note"><Icon name="spark" size={15}/><span>Sources provide context. They are not a verdict.</span></div>
       </aside>
     </div>
 
-    {composeOpen && <div className="pv-overlay" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setComposeOpen(false); }}><section className="pv-compose-dialog" role="dialog" aria-modal="true" aria-labelledby="pv-compose-title"><div className="pv-dialog-head"><div><p className="pv-eyebrow">EINE NOTIZ FÜR DEN FEED</p><h2 id="pv-compose-title">Was möchtest du teilen?</h2></div><button className="pv-icon-button" aria-label="Editor schließen" onClick={() => setComposeOpen(false)}><Icon name="close"/></button></div><form onSubmit={createPost}><label htmlFor="pv-compose-text">Deine Notiz</label><textarea ref={composeRef} id="pv-compose-text" value={composerText} onChange={(event) => setComposerText(event.target.value)} placeholder="Ein Gedanke, eine offene Frage oder ein lesenswerter Fund …" maxLength={600} required/><div className="pv-compose-bottom"><span>{composerText.length} / 600 <span>·</span> Nur in dieser Vorschau gespeichert</span><button className="pv-compose-button" type="submit" disabled={!composerText.trim()}><span>Notiz teilen</span><Icon name="arrow" size={16}/></button></div></form></section></div>}
+    {composeOpen && <div className="pv-overlay" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setComposeOpen(false); }}><section className="pv-compose-dialog" role="dialog" aria-modal="true" aria-labelledby="pv-compose-title"><div className="pv-dialog-head"><div><p className="pv-eyebrow">A NOTE FOR THE FEED</p><h2 id="pv-compose-title">What would you like to share?</h2></div><button className="pv-icon-button" aria-label="Close editor" onClick={() => setComposeOpen(false)}><Icon name="close"/></button></div><form onSubmit={createPost}><label htmlFor="pv-compose-text">Your note</label><textarea ref={composeRef} id="pv-compose-text" value={composerText} onChange={(event) => setComposerText(event.target.value)} placeholder="A thought, an open question, or an interesting find …" maxLength={600} required/><div className="pv-compose-bottom"><span>{composerText.length} / 600 <span>·</span> Saved in this preview only</span><button className="pv-compose-button" type="submit" disabled={!composerText.trim()}><span>Share note</span><Icon name="arrow" size={16}/></button></div></form></section></div>}
 
-    {mobileEvidenceOpen && <div className="pv-overlay pv-sheet-overlay" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setMobileEvidenceOpen(false); }}><section className="pv-evidence-sheet" role="dialog" aria-modal="true" aria-labelledby="pv-sheet-title"><div className="pv-sheet-grip"/><div className="pv-dialog-head"><div><p className="pv-eyebrow">ZUR NOTIZ</p><h2 id="pv-sheet-title">{selectedPost ? "Einordnung" : "Quellen"}</h2></div><button className="pv-icon-button pv-sheet-close" aria-label="Quellen schließen" onClick={() => setMobileEvidenceOpen(false)}><Icon name="close"/></button></div>{selectedPost ? <><div className="pv-selected-post"><div className="pv-selected-author"><Avatar initials={selectedPost.initials} tone={selectedPost.tone} small/><span><strong>{selectedPost.author}</strong><small>@{selectedPost.handle}</small></span></div><p>{selectedPost.text}</p></div><div className="pv-context-divider"><span>BEIGEFÜGTE QUELLEN</span><span>{selectedPost.evidence.length} QUELLEN</span></div>{selectedPost.evidence.length ? <>{selectedPost.evidence.map((item) => <EvidenceCard key={item.id} item={item} selected={item.id === (selectedEvidence?.id ?? "")} onClick={() => setSelectedEvidenceId(item.id)}/>)}{selectedEvidence && <EvidenceDetails item={selectedEvidence}/>}</> : <div className="pv-no-sources"><Icon name="bookmark" size={17}/><p>Noch keine Quellen</p><span>Diese Demo-Notiz enthält keine Quellen.</span></div>}</> : <p className="pv-no-sources">Wähle eine Notiz aus, um ihre Quellen zu sehen.</p>}</section></div>}
+    {mobileEvidenceOpen && <div className="pv-overlay pv-sheet-overlay" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setMobileEvidenceOpen(false); }}><section className="pv-evidence-sheet" role="dialog" aria-modal="true" aria-labelledby="pv-sheet-title"><div className="pv-sheet-grip"/><div className="pv-dialog-head"><div><p className="pv-eyebrow">ABOUT THIS NOTE</p><h2 id="pv-sheet-title">{selectedPost ? "Context" : "Sources"}</h2></div><button className="pv-icon-button pv-sheet-close" aria-label="Close sources" onClick={() => setMobileEvidenceOpen(false)}><Icon name="close"/></button></div>{selectedPost ? <><div className="pv-selected-post"><div className="pv-selected-author"><Avatar initials={selectedPost.initials} tone={selectedPost.tone} small/><span><strong>{selectedPost.author}</strong><small>@{selectedPost.handle}</small></span></div><p>{selectedPost.text}</p></div><div className="pv-context-divider"><span>ATTACHED SOURCES</span><span>{selectedPost.evidence.length} SOURCES</span></div>{selectedPost.evidence.length ? <>{selectedPost.evidence.map((item) => <EvidenceCard key={item.id} item={item} selected={item.id === (selectedEvidence?.id ?? "")} onClick={() => setSelectedEvidenceId(item.id)}/>)}{selectedEvidence && <EvidenceDetails item={selectedEvidence}/>}</> : <div className="pv-no-sources"><Icon name="bookmark" size={17}/><p>No sources yet</p><span>This demo note has no sources.</span></div>}</> : <p className="pv-no-sources">Select a note to see its sources.</p>}</section></div>}
   </div>;
 }

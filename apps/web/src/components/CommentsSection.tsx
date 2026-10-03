@@ -34,7 +34,7 @@ export default function CommentsSection({ postId }: { postId: string }) {
   return (
     <div className="mt-3 text-xs">
       <button onClick={() => setOpen((o) => !o)} className="font-medium text-gray-500 hover:underline">
-        {open ? "Kommentare ausblenden" : "Kommentare anzeigen"}
+        {open ? "Hide comments" : "Show comments"}
       </button>
       {open && (
         <div className="mt-2 flex flex-col gap-2">
@@ -45,17 +45,17 @@ export default function CommentsSection({ postId }: { postId: string }) {
             </div>
           ))}
           {comments.length === 0 && (
-            <p className="text-gray-400">Noch keine Kommentare.</p>
+            <p className="text-gray-400">No comments yet.</p>
           )}
           <form onSubmit={(e) => void onSubmit(e)} className="flex gap-2">
             <input
               value={text}
               onChange={(e) => setText(e.target.value)}
-              placeholder="Kommentar schreiben…"
+              placeholder="Write a comment…"
               className="w-full rounded-lg border border-gray-300 px-3 py-1.5"
             />
             <button className="shrink-0 rounded-lg bg-black px-3 py-1.5 font-medium text-white">
-              Senden
+              Send
             </button>
           </form>
         </div>

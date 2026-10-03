@@ -18,18 +18,18 @@ export default function LoginPage() {
       await login(email, password);
       navigate("/");
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Login fehlgeschlagen");
+      setError(err instanceof ApiError ? err.message : "Sign in failed");
     }
   }
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className={`${card} w-full max-w-sm`}>
-        <h1 className="mb-6 text-xl font-semibold">Anmelden</h1>
+        <h1 className="mb-6 text-xl font-semibold">Sign in</h1>
         <form onSubmit={onSubmit} className="flex flex-col gap-3">
           <input
             type="email"
-            placeholder="E-Mail"
+            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className={input}
@@ -37,7 +37,7 @@ export default function LoginPage() {
           />
           <input
             type="password"
-            placeholder="Passwort"
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className={input}
@@ -45,11 +45,11 @@ export default function LoginPage() {
           />
           {error && <p className="text-sm text-red-600">{error}</p>}
           <button type="submit" className={btnPrimary}>
-            Anmelden
+            Sign in
           </button>
         </form>
         <p className="mt-4 text-sm text-gray-500">
-          Noch kein Konto?{" "}
+          No account yet?{" "}
           <Link to="/register" className="font-medium text-black hover:underline">
             Registrieren
           </Link>

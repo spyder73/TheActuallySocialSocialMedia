@@ -18,13 +18,13 @@ export default function FollowBox() {
     setStatus(null);
     try {
       await apiFetch(`/users/${target}/follow`, { method: "POST" });
-      setStatus(`Du folgst jetzt @${target}`);
+      setStatus(`You are now following @${target}`);
       setLastTarget(target);
       setUsername("");
       await queryClient.invalidateQueries({ queryKey: ["feed", "first"] });
     } catch (err) {
       setStatus(
-        err instanceof ApiError ? err.message : "Folgen fehlgeschlagen"
+        err instanceof ApiError ? err.message : "Could not follow"
       );
     }
   }
@@ -34,16 +34,16 @@ export default function FollowBox() {
       <input
         value={username}
         onChange={(e) => setUsername(e.target.value)}
-        placeholder="Nutzername folgen oder Profil ansehen"
+        placeholder="Follow a username or view a profile"
         className={`${input} w-full`}
       />
-      <button className={btnSecondary}>Folgen</button>
+      <button className={btnSecondary}>Follow</button>
       {username.trim() && (
         <Link
           to={`/u/${username.trim().replace(/^@/, "")}`}
           className="shrink-0 text-xs text-gray-500 hover:underline"
         >
-          Profil ansehen
+          View profile
         </Link>
       )}
       {status && lastTarget && (

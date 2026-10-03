@@ -50,7 +50,7 @@ A serious private social space with the typography and composition of a contempo
 | Motion | Roughly 120–200ms control feedback and 220–280ms panel transitions; respect reduced motion |
 | Signature | Chronological date markers, expressive headings, deliberate image framing, calm caught-up ending |
 
-Colors are starting points, subject to contrast testing. All components use semantic tokens; theme preference persists without an initial flash. Keep German copy consistent with the existing product initially and centralize labels for later localization.
+Colors are starting points, subject to contrast testing. All components use semantic tokens; theme preference persists without an initial flash. Use English throughout the product and project: UI, documentation, code comments, examples, fixtures, and default AI responses. Centralize UI labels for future localization.
 
 The first visual deliverable is a working feed → post → evidence experience in both themes, with representative fixture content confined to development/demo mode. The real installation starts empty. Small-community states must feel intentional; do not fabricate trending content, activity or popularity counts.
 

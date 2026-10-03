@@ -66,7 +66,7 @@ async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
     const msg =
       typeof payload.error === "string"
         ? payload.error
-        : response.statusText || "Die Anfrage ist fehlgeschlagen.";
+        : response.statusText || "The request failed.";
     throw new HttpError(msg, response.status);
   }
   if (response.status === 204) return undefined as T;
@@ -81,7 +81,7 @@ const initials = (user: User) =>
     .join("")
     .toUpperCase();
 const when = (value: string) =>
-  new Intl.DateTimeFormat("de-DE", {
+  new Intl.DateTimeFormat("en-GB", {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(value));
@@ -191,7 +191,7 @@ export default function PilotApp() {
       .catch((error) => {
         if (active && !(error instanceof HttpError && error.status === 401))
           setAuthError(
-            "Der TASSM-Dienst ist gerade nicht erreichbar. Bitte versuche es später erneut.",
+            "The TASSM service is currently unavailable. Please try again later.",
           );
       })
       .finally(() => {
@@ -205,7 +205,7 @@ export default function PilotApp() {
     try {
       await api("/auth/logout", { method: "POST" });
     } catch {
-      setAuthError("Abmelden war gerade nicht möglich.");
+      setAuthError("Could not sign out right now.");
       return;
     }
     setUser(null);
@@ -214,7 +214,7 @@ export default function PilotApp() {
   if (authLoading)
     return (
       <div className="pl-loading" role="status">
-        Dein geschützter Raum wird geöffnet …
+        Opening your private space …
       </div>
     );
   const isAuthRoute = ["/login", "/register", "/reset"].includes(
@@ -321,7 +321,7 @@ function AuthScreen({
       }
     } catch (reason) {
       setError(
-        reason instanceof Error ? reason.message : "Bitte versuche es erneut.",
+        reason instanceof Error ? reason.message : "Please try again.",
       );
     } finally {
       setBusy(false);
@@ -329,31 +329,31 @@ function AuthScreen({
   }
   const title =
     mode === "login"
-      ? "Schön, dass du da bist."
+      ? "Good to have you here."
       : mode === "register"
-        ? "Dein Platz wartet."
-        : "Ein neuer Anfang.";
+        ? "Your space is ready."
+        : "A fresh start.";
   return (
     <main className="pl-auth" data-theme="system">
       <section className="pl-auth-card">
         <Link to="/login" className="pl-brand">
           <span className="pl-brand-mark">✳</span>TASSM
         </Link>
-        <p className="pl-kicker">EIN PRIVATER ORT FÜR ECHTEN AUSTAUSCH</p>
+        <p className="pl-kicker">A PRIVATE SPACE FOR REAL CONVERSATION</p>
         <h1>{title}</h1>
         <p className="pl-auth-intro">
-          Gedanken zum Weiterdenken. Menschen, die sich kennen.
+          Ideas worth thinking about. A place for people who know each other.
         </p>
         {error && <Notice>{error}</Notice>}
         {done && (
           <Notice tone="info">
-            Dein Passwort wurde geändert. Du kannst dich jetzt anmelden.
+            Your password has been changed. You can now sign in.
           </Notice>
         )}
         {mode !== "login" && !tokenRef.current && (
           <Notice>
-            Bitte öffne den vollständigen Einladungs- oder
-            Wiederherstellungslink von deinem Administrator.
+            Please open the full invitation or
+            recovery link from your administrator.
           </Notice>
         )}
         {!done && (
@@ -361,7 +361,7 @@ function AuthScreen({
             {mode === "register" && (
               <>
                 <label>
-                  Anzeigename
+                  Display name
                   <input
                     name="displayName"
                     autoComplete="name"
@@ -370,7 +370,7 @@ function AuthScreen({
                   />
                 </label>
                 <label>
-                  Benutzername
+                  Username
                   <input
                     name="username"
                     autoComplete="username"
@@ -384,7 +384,7 @@ function AuthScreen({
             )}
             {mode !== "reset" && (
               <label>
-                E-Mail-Adresse
+                Email address
                 <input
                   name="email"
                   type="email"
@@ -395,7 +395,7 @@ function AuthScreen({
             )}
             {mode !== "reset" && (
               <label>
-                Passwort
+                Password
                 <input
                   name="password"
                   type="password"
@@ -409,7 +409,7 @@ function AuthScreen({
             )}
             {mode === "reset" && (
               <label>
-                Neues Passwort
+                New password
                 <input
                   name="password"
                   type="password"
@@ -427,25 +427,25 @@ function AuthScreen({
               }
             >
               {busy
-                ? "Einen Moment …"
+                ? "One moment …"
                 : mode === "login"
-                  ? "Anmelden"
+                  ? "Sign in"
                   : mode === "register"
-                    ? "Konto anlegen"
-                    : "Passwort ändern"}
+                    ? "Create account"
+                    : "Change password"}
             </button>
           </form>
         )}
         <div className="pl-auth-links">
-          {mode !== "login" && <Link to="/login">Zur Anmeldung</Link>}
+          {mode !== "login" && <Link to="/login">Back to sign in</Link>}
           {mode === "login" && (
-            <Link to="/register">Einladung erhalten? Konto anlegen</Link>
+            <Link to="/register">Have an invitation? Create an account</Link>
           )}
-          {mode === "login" && <Link to="/reset">Passwort zurücksetzen</Link>}
+          {mode === "login" && <Link to="/reset">Reset password</Link>}
         </div>
         <p className="pl-private-note">
-          Klein, privat und chronologisch. Dein Feed zeigt nur Beiträge aus
-          deinem Netzwerk.
+          Small, private, and chronological. Your feed only shows posts from
+          your network.
         </p>
       </section>
     </main>
@@ -469,10 +469,10 @@ function Shell({
 }) {
   const location = useLocation();
   const nav = [
-    { to: "/", label: "Leseraum", icon: "⌂" },
-    { to: "/members", label: "Mitglieder", icon: "◎" },
-    { to: "/messages", label: "Gespräche", icon: "↗" },
-    { to: `/u/${user.username}`, label: "Mein Profil", icon: "◌" },
+    { to: "/", label: "Reading room", icon: "⌂" },
+    { to: "/members", label: "Members", icon: "◎" },
+    { to: "/messages", label: "Conversations", icon: "↗" },
+    { to: `/u/${user.username}`, label: "My profile", icon: "◌" },
   ];
   return (
     <div className="pl-app" data-theme={theme}>
@@ -482,9 +482,9 @@ function Shell({
             <span className="pl-brand-mark">✳</span>TASSM
           </Link>
           <p className="pl-sidebar-caption">
-            EIN PRIVATER LESE- UND GESPRÄCHSRAUM
+            A PRIVATE SPACE TO READ AND TALK
           </p>
-          <nav className="pl-nav" aria-label="Hauptnavigation">
+          <nav className="pl-nav" aria-label="Main navigation">
             {nav.map((item) => (
               <Link
                 key={item.to}
@@ -503,7 +503,7 @@ function Shell({
           </nav>
           <div className="pl-sidebar-note">
             <span aria-hidden="true">✳</span>
-            <p>Ein kleiner Ort für Austausch und sorgfältiges Zuhören.</p>
+            <p>A small place for conversation and thoughtful listening.</p>
           </div>
           <div className="pl-sidebar-bottom">
             <Link to={`/u/${user.username}`} className="pl-self">
@@ -514,7 +514,7 @@ function Shell({
               </span>
             </Link>
             <button className="pl-text-button" onClick={onSignOut}>
-              Abmelden
+              Sign out
             </button>
           </div>
         </aside>
@@ -527,21 +527,21 @@ function Shell({
               <button
                 className="pl-icon-button"
                 onClick={onTheme}
-                aria-label={`Farbschema ändern; aktuell ${theme === "system" ? "System" : theme === "light" ? "Hell" : "Dunkel"}`}
+                aria-label={`Change colour theme; currently ${theme === "system" ? "System" : theme === "light" ? "Light" : "Dark"}`}
               >
                 ◐
               </button>
               <button className="pl-text-button" onClick={onSignOut}>
-                Abmelden
+                Sign out
               </button>
             </div>
           </header>
           <div className="pl-main-toolbar">
-            <span className="pl-kicker">DEIN PRIVATER RAUM</span>
+            <span className="pl-kicker">YOUR PRIVATE SPACE</span>
             <button className="pl-theme" onClick={onTheme}>
               ◐{" "}
               <span>
-                {{ system: "System", light: "Hell", dark: "Dunkel" }[theme]}
+                {{ system: "System", light: "Light", dark: "Dark" }[theme]}
               </span>
             </button>
           </div>
@@ -554,21 +554,21 @@ function Shell({
         </main>
         <aside className="pl-rail">
           <div className="pl-rail-card">
-            <p className="pl-kicker">WAS DICH ERWARTET</p>
-            <h2>Ein ruhigerer Takt.</h2>
+            <p className="pl-kicker">WHAT TO EXPECT</p>
+            <h2>A quieter pace.</h2>
             <p>
-              Beiträge erscheinen chronologisch im Netzwerk. Keine Rangliste und
-              keine erfundene Aktivität.
+              Posts appear in chronological order across the network. No rankings and
+              no fabricated activity.
             </p>
           </div>
           <div className="pl-rail-foot">
-            Einladungsgeschützter Zugang
+            Invitation-only access
             <br />
             TASSM · {new Date().getFullYear()}
           </div>
         </aside>
       </div>
-      <nav className="pl-mobile-nav" aria-label="Hauptnavigation">
+      <nav className="pl-mobile-nav" aria-label="Main navigation">
         {nav.map((item) => (
           <Link
             key={item.to}
@@ -637,7 +637,7 @@ function Feed({ user }: { user: User }) {
       setError(
         reason instanceof Error
           ? reason.message
-          : "Der Feed konnte nicht geladen werden.",
+          : "Could not load the feed.",
       );
     } finally {
       setLoading(false);
@@ -697,7 +697,7 @@ function Feed({ user }: { user: User }) {
       setMutationError(
         reason instanceof Error
           ? reason.message
-          : "Beitrag konnte nicht veröffentlicht werden.",
+          : "Could not publish the post.",
       );
     } finally {
       setBusy(false);
@@ -706,42 +706,42 @@ function Feed({ user }: { user: User }) {
   return (
     <>
       <PageHeading
-        eyebrow="CHRONOLOGISCH · OHNE RANGLISTE"
-        title="Der Leseraum"
-        subtitle="Gedanken zum Weiterdenken. In deinem eigenen Tempo."
+        eyebrow="CHRONOLOGICAL · NO RANKINGS"
+        title="The Reading Room"
+        subtitle="Ideas worth thinking about. At your own pace."
         action={
           <button
             className="pl-button primary"
             onClick={() => setComposer(true)}
           >
-            ＋ <span>Notiz schreiben</span>
+            ＋ <span>Write a note</span>
           </button>
         }
       />
-      <section className="pl-feed" aria-label="Beiträge aus deinem Netzwerk">
+      <section className="pl-feed" aria-label="Posts from your network">
         {error && (
           <div className="pl-feed-state">
             <Notice>{error}</Notice>
             <button className="pl-button quiet" onClick={() => void load()}>
-              Erneut versuchen
+              Try again
             </button>
           </div>
         )}
         {loading && !posts.length && (
           <p className="pl-inline-loading" role="status">
-            Beiträge werden geladen …
+            Loading posts …
           </p>
         )}
         {!loading && !error && posts.length === 0 && (
           <Empty
-            title="Hier ist es gerade still."
-            body="Es gibt noch keine geteilten Notizen. Du kannst mit einer eigenen beginnen."
+            title="It’s quiet here for now."
+            body="There are no shared notes yet. You can start one."
           >
             <button
               className="pl-button primary"
               onClick={() => setComposer(true)}
             >
-              ＋ Erste Notiz schreiben
+              ＋ Write the first note
             </button>
           </Empty>
         )}
@@ -755,7 +755,7 @@ function Feed({ user }: { user: User }) {
               disabled={loading}
               onClick={() => void load(nextCursor)}
             >
-              {loading ? "Lädt …" : "Ältere Beiträge laden"}
+              {loading ? "Loading …" : "Load older posts"}
             </button>
           </div>
         )}
@@ -776,12 +776,12 @@ function Feed({ user }: { user: User }) {
           >
             <header className="pl-dialog-head">
               <div>
-                <p className="pl-kicker">EIN GEDANKE VON DIR</p>
-                <h2 id="compose-title">Was beschäftigt dich?</h2>
+                <p className="pl-kicker">A THOUGHT FROM YOU</p>
+                <h2 id="compose-title">What’s on your mind?</h2>
               </div>
               <button
                 className="pl-icon-button"
-                aria-label="Schließen"
+                aria-label="Close"
                 onClick={() => setComposer(false)}
               >
                 ×
@@ -789,7 +789,7 @@ function Feed({ user }: { user: User }) {
             </header>
             <form onSubmit={publish}>
               <label className="pl-field-label" htmlFor="compose-text">
-                Deine Notiz
+                Your note
               </label>
               <textarea
                 id="compose-text"
@@ -797,20 +797,20 @@ function Feed({ user }: { user: User }) {
                 value={text}
                 maxLength={5000}
                 onChange={(event) => setText(event.target.value)}
-                placeholder="Schreib, was du teilen möchtest …"
+                placeholder="Write what you’d like to share …"
                 required
               />
               <div className="pl-compose-options">
                 <label>
-                  Sichtbarkeit
+                  Visibility
                   <select
                     value={visibility}
                     onChange={(event) =>
                       setVisibility(event.target.value as typeof visibility)
                     }
                   >
-                    <option value="public">Alle Mitglieder</option>
-                    <option value="close_friends">Enge Freunde</option>
+                    <option value="public">All members</option>
+                    <option value="close_friends">Close friends</option>
                   </select>
                 </label>
                 <span>{text.length}/5000</span>
@@ -823,13 +823,13 @@ function Feed({ user }: { user: User }) {
                   disabled={busy}
                   onClick={() => setComposer(false)}
                 >
-                  Abbrechen
+                  Cancel
                 </button>
                 <button
                   className="pl-button primary"
                   disabled={busy || !text.trim()}
                 >
-                  {busy ? "Wird veröffentlicht …" : "Notiz veröffentlichen"}
+                  {busy ? "Publishing …" : "Publish note"}
                 </button>
               </div>
             </form>
@@ -843,7 +843,7 @@ function PostCard({ post, currentUser }: { post: Post; currentUser: User }) {
   const [notice, setNotice] = useState("");
   async function report() {
     const reason = window
-      .prompt("Warum möchtest du diese Notiz melden?")
+      .prompt("Why are you reporting this note?")
       ?.trim();
     if (!reason) return;
     try {
@@ -851,17 +851,17 @@ function PostCard({ post, currentUser }: { post: Post; currentUser: User }) {
         method: "POST",
         body: JSON.stringify({ targetType: "post", targetId: post.id, reason }),
       });
-      setNotice("Danke. Deine Meldung wurde übermittelt.");
+      setNotice("Thanks. Your report has been submitted.");
     } catch (error) {
       setNotice(
         error instanceof Error
           ? error.message
-          : "Meldung konnte nicht gesendet werden.",
+          : "Could not submit the report.",
       );
     }
   }
   async function remove() {
-    if (!window.confirm("Diese Notiz und ihre Antworten dauerhaft löschen?"))
+    if (!window.confirm("Permanently delete this note and its replies?"))
       return;
     try {
       await api(`/posts/${encodeURIComponent(post.id)}`, { method: "DELETE" });
@@ -870,7 +870,7 @@ function PostCard({ post, currentUser }: { post: Post; currentUser: User }) {
       setNotice(
         error instanceof Error
           ? error.message
-          : "Notiz konnte nicht gelöscht werden.",
+          : "Could not delete the note.",
       );
     }
   }
@@ -887,28 +887,28 @@ function PostCard({ post, currentUser }: { post: Post; currentUser: User }) {
           </Link>
           <time dateTime={post.createdAt}>{when(post.createdAt)}</time>
           {post.visibility === "close_friends" && (
-            <span className="pl-visibility">Enge Freunde</span>
+            <span className="pl-visibility">Close friends</span>
           )}
         </div>
         <p className="pl-post-text">{post.text}</p>
         <div className="pl-post-actions">
           <Link
             to={`/post/${post.id}`}
-            aria-label={`${post.commentCount} Antworten anzeigen`}
+            aria-label={`${post.commentCount} View replies`}
           >
             ↩{" "}
             <span>
               {post.commentCount}{" "}
-              {post.commentCount === 1 ? "Antwort" : "Antworten"}
+              {post.commentCount === 1 ? "Reply" : "Replies"}
             </span>
           </Link>
           {post.author.id === currentUser.id ? (
             <>
-              <span className="pl-by-you">Deine Notiz</span>
-              <button onClick={() => void remove()}>Löschen</button>
+              <span className="pl-by-you">Your note</span>
+              <button onClick={() => void remove()}>Delete</button>
             </>
           ) : (
-            <button onClick={() => void report()}>Melden</button>
+            <button onClick={() => void report()}>Report</button>
           )}
         </div>
         {notice && <Notice tone="info">{notice}</Notice>}
@@ -944,7 +944,7 @@ function Thread({ user }: { user: User }) {
       setError(
         reason instanceof Error
           ? reason.message
-          : "Die Unterhaltung konnte nicht geladen werden.",
+          : "Could not load the thread.",
       );
     } finally {
       setLoading(false);
@@ -968,7 +968,7 @@ function Thread({ user }: { user: User }) {
       setError(
         reason instanceof Error
           ? reason.message
-          : "Antwort konnte nicht veröffentlicht werden.",
+          : "Could not publish the reply.",
       );
     } finally {
       setBusy(false);
@@ -977,7 +977,7 @@ function Thread({ user }: { user: User }) {
   async function report() {
     if (!post) return;
     const reason = window
-      .prompt("Warum möchtest du diese Notiz melden?")
+      .prompt("Why are you reporting this note?")
       ?.trim();
     if (!reason) return;
     try {
@@ -985,19 +985,19 @@ function Thread({ user }: { user: User }) {
         method: "POST",
         body: JSON.stringify({ targetType: "post", targetId: post.id, reason }),
       });
-      setError("Danke. Deine Meldung wurde übermittelt.");
+      setError("Thanks. Your report has been submitted.");
     } catch (problem) {
       setError(
         problem instanceof Error
           ? problem.message
-          : "Meldung konnte nicht gesendet werden.",
+          : "Could not submit the report.",
       );
     }
   }
   async function remove() {
     if (
       !post ||
-      !window.confirm("Diese Notiz und ihre Antworten dauerhaft löschen?")
+      !window.confirm("Permanently delete this note and its replies?")
     )
       return;
     try {
@@ -1007,24 +1007,24 @@ function Thread({ user }: { user: User }) {
       setError(
         problem instanceof Error
           ? problem.message
-          : "Notiz konnte nicht gelöscht werden.",
+          : "Could not delete the note.",
       );
     }
   }
   return (
     <>
       <PageHeading
-        eyebrow="GESPRÄCHSFADEN"
-        title="Eine Notiz, viele Gedanken."
-        subtitle="Antworten bleiben dort, wo das Gespräch begonnen hat."
+        eyebrow="THREAD"
+        title="One note, many thoughts."
+        subtitle="Replies stay where the conversation began."
       />
       <div className="pl-thread">
         <Link className="pl-back-link" to="/">
-          ← Zurück zum Leseraum
+          ← Back to the Reading Room
         </Link>
         {loading && (
           <p role="status" className="pl-inline-loading">
-            Unterhaltung wird geladen …
+            Loading thread …
           </p>
         )}
         {error && <Notice>{error}</Notice>}
@@ -1041,13 +1041,13 @@ function Thread({ user }: { user: User }) {
               <p className="pl-post-text">{post.text}</p>
               <div className="pl-post-actions">
                 {post.author.id === user.id ? (
-                  <button onClick={() => void remove()}>Notiz löschen</button>
+                  <button onClick={() => void remove()}>Delete note</button>
                 ) : (
-                  <button onClick={() => void report()}>Notiz melden</button>
+                  <button onClick={() => void report()}>Report note</button>
                 )}
               </div>
             </article>
-            <section className="pl-comments" aria-label="Antworten">
+            <section className="pl-comments" aria-label="Replies">
               {comments.map((comment) => (
                 <article key={comment.id} className="pl-comment">
                   <Avatar user={comment.author} size="small" />
@@ -1065,30 +1065,30 @@ function Thread({ user }: { user: User }) {
               ))}
               {comments.length === 0 && (
                 <p className="pl-muted">
-                  Noch keine Antworten. Das Gespräch beginnt hier.
+                  No replies yet. The conversation starts here.
                 </p>
               )}
               {comments.length >= 500 && (
                 <p className="pl-muted">
-                  Angezeigt werden die ersten 500 Antworten.
+                  Showing the first 500 replies.
                 </p>
               )}
             </section>
             <form className="pl-reply-form" onSubmit={submit}>
-              <label htmlFor="reply-text">Deine Antwort</label>
+              <label htmlFor="reply-text">Your reply</label>
               <textarea
                 id="reply-text"
                 value={text}
                 onChange={(event) => setText(event.target.value)}
                 maxLength={2000}
                 required
-                placeholder="Antworte mit Bedacht …"
+                placeholder="Reply thoughtfully …"
               />
               <button
                 className="pl-button primary"
                 disabled={busy || !text.trim()}
               >
-                {busy ? "Wird gesendet …" : "Antworten"}
+                {busy ? "Sending …" : "Replies"}
               </button>
             </form>
           </>
@@ -1123,7 +1123,7 @@ function Members({ user }: { user: User }) {
       setError(
         reason instanceof Error
           ? reason.message
-          : "Mitglieder konnten nicht geladen werden.",
+          : "Could not load members.",
       );
     } finally {
       setLoading(false);
@@ -1134,8 +1134,8 @@ function Members({ user }: { user: User }) {
   }, [load]);
   const matching = members.filter((person) =>
     `${person.displayName} ${person.username}`
-      .toLocaleLowerCase("de")
-      .includes(filter.toLocaleLowerCase("de")),
+      .toLocaleLowerCase("en-GB")
+      .includes(filter.toLocaleLowerCase("en-GB")),
   );
   async function toggle(person: User, kind: "follow" | "close_friend") {
     setBusyId(person.id);
@@ -1156,7 +1156,7 @@ function Members({ user }: { user: User }) {
       setError(
         reason instanceof Error
           ? reason.message
-          : "Änderung konnte nicht gespeichert werden.",
+          : "Could not save the change.",
       );
     } finally {
       setBusyId("");
@@ -1176,7 +1176,7 @@ function Members({ user }: { user: User }) {
       setError(
         reason instanceof Error
           ? reason.message
-          : "Blockierung konnte nicht aufgehoben werden.",
+          : "Could not unblock this member.",
       );
     } finally {
       setBusyId("");
@@ -1185,34 +1185,34 @@ function Members({ user }: { user: User }) {
   return (
     <>
       <PageHeading
-        eyebrow="DEIN NETZWERK"
-        title="Menschen statt Reichweite."
-        subtitle="Folge Menschen, deren Gedanken du gern liest."
+        eyebrow="YOUR NETWORK"
+        title="People over popularity."
+        subtitle="Follow people whose ideas you enjoy reading."
       />
       <div className="pl-members">
         <label className="pl-search">
-          Mitglieder finden
+          Find members
           <input
             value={filter}
             onChange={(event) => setFilter(event.target.value)}
-            placeholder="Name oder Benutzername"
+            placeholder="Name or username"
           />
         </label>
         {error && <Notice>{error}</Notice>}
         {loading && (
           <p role="status" className="pl-inline-loading">
-            Mitglieder werden geladen …
+            Loading members …
           </p>
         )}
         {!loading && !error && matching.length === 0 && (
           <Empty
             title={
-              filter ? "Niemand gefunden." : "Dein Netzwerk wächst in Ruhe."
+              filter ? "No one found." : "Your network is growing at its own pace."
             }
             body={
               filter
-                ? "Ändere den Suchbegriff und versuche es erneut."
-                : "Es gibt gerade keine weiteren Mitglieder."
+                ? "Change your search and try again."
+                : "There are no more members right now."
             }
           />
         )}
@@ -1233,15 +1233,15 @@ function Members({ user }: { user: User }) {
                 onClick={() => void toggle(person, "follow")}
               >
                 {relationships.following.includes(person.id)
-                  ? "Du folgst"
-                  : "Folgen"}
+                  ? "Following"
+                  : "Follow"}
               </button>
               <button
                 className={`pl-button mini ${relationships.closeFriends.includes(person.id) ? "selected" : ""}`}
                 disabled={busyId === person.id}
                 onClick={() => void toggle(person, "close_friend")}
-                aria-label={`${relationships.closeFriends.includes(person.id) ? "Aus engen Freunden entfernen" : "Zu engen Freunden hinzufügen"}: ${person.displayName}`}
-                title="Enge Freunde"
+                aria-label={`${relationships.closeFriends.includes(person.id) ? "Remove from close friends" : "Add to close friends"}: ${person.displayName}`}
+                title="Close friends"
               >
                 ✳
               </button>
@@ -1249,7 +1249,7 @@ function Members({ user }: { user: User }) {
                 className="pl-button quiet"
                 onClick={async () => {
                   const reason = window
-                    .prompt("Warum möchtest du dieses Mitglied melden?")
+                    .prompt("Why are you reporting this member?")
                     ?.trim();
                   if (!reason) return;
                   try {
@@ -1261,24 +1261,24 @@ function Members({ user }: { user: User }) {
                         reason,
                       }),
                     });
-                    setError("Danke. Deine Meldung wurde übermittelt.");
+                    setError("Thanks. Your report has been submitted.");
                   } catch (problem) {
                     setError(
                       problem instanceof Error
                         ? problem.message
-                        : "Meldung konnte nicht gesendet werden.",
+                        : "Could not submit the report.",
                     );
                   }
                 }}
               >
-                Melden
+                Report
               </button>
             </div>
           </article>
         ))}
         {relationships.blocked.length > 0 && (
           <section className="pl-blocked">
-            <h2>Blockierte Konten</h2>
+            <h2>Blocked accounts</h2>
             {relationships.blocked.map((id) => (
               <div key={id}>
                 <code>{id}</code>
@@ -1287,7 +1287,7 @@ function Members({ user }: { user: User }) {
                   disabled={busyId === id}
                   onClick={() => void unblock(id)}
                 >
-                  Blockierung aufheben
+                  Unblock
                 </button>
               </div>
             ))}
@@ -1333,7 +1333,7 @@ function Profile({
         ? current
         : (memberData.users.find((person) => person.username === username) ??
           null);
-      if (!found) throw new Error("Dieses Profil ist gerade nicht verfügbar.");
+      if (!found) throw new Error("This profile is currently unavailable.");
       setProfile(found);
       setRelationships(relationData);
       const matchingPosts: Post[] = [];
@@ -1355,7 +1355,7 @@ function Profile({
       setError(
         reason instanceof Error
           ? reason.message
-          : "Profil konnte nicht geladen werden.",
+          : "Could not load the profile.",
       );
     } finally {
       setLoading(false);
@@ -1390,7 +1390,7 @@ function Profile({
       setError(
         reason instanceof Error
           ? reason.message
-          : "Profil konnte nicht gespeichert werden.",
+          : "Could not save the profile.",
       );
     } finally {
       setBusy(false);
@@ -1415,7 +1415,7 @@ function Profile({
       setError(
         reason instanceof Error
           ? reason.message
-          : "Änderung konnte nicht gespeichert werden.",
+          : "Could not save the change.",
       );
     } finally {
       setBusy(false);
@@ -1435,7 +1435,7 @@ function Profile({
       setError(
         reason instanceof Error
           ? reason.message
-          : "Blockierung konnte nicht aufgehoben werden.",
+          : "Could not unblock this member.",
       );
     } finally {
       setBusy(false);
@@ -1444,13 +1444,13 @@ function Profile({
   return (
     <>
       <PageHeading
-        eyebrow="MITGLIEDSPROFIL"
-        title={profile?.displayName ?? "Profil"}
+        eyebrow="MEMBER PROFILE"
+        title={profile?.displayName ?? "Profile"}
         subtitle={`@${username}`}
       />
       {loading && (
         <p role="status" className="pl-inline-loading">
-          Profil wird geladen …
+          Loading profile …
         </p>
       )}
       {error && <Notice>{error}</Notice>}
@@ -1470,7 +1470,7 @@ function Profile({
                   className="pl-button outline"
                   onClick={() => setEdit((value) => !value)}
                 >
-                  {edit ? "Schließen" : "Profil bearbeiten"}
+                  {edit ? "Close" : "Edit profile"}
                 </button>
               ) : (
                 <>
@@ -1480,14 +1480,14 @@ function Profile({
                     onClick={() => void relationship("follow")}
                   >
                     {relationships.following.includes(profile.id)
-                      ? "Entfolgen"
-                      : "Folgen"}
+                      ? "Unfollow"
+                      : "Follow"}
                   </button>
                   <button
                     disabled={busy}
                     className={`pl-button mini ${relationships.closeFriends.includes(profile.id) ? "selected" : ""}`}
                     onClick={() => void relationship("close_friend")}
-                    aria-label="Enge Freundschaft umschalten"
+                    aria-label="Toggle close-friend status"
                   >
                     ✳
                   </button>
@@ -1497,15 +1497,15 @@ function Profile({
                     onClick={() => void relationship("block")}
                   >
                     {relationships.blocked.includes(profile.id)
-                      ? "Blockierung aufheben"
-                      : "Blockieren"}
+                      ? "Unblock"
+                      : "Block"}
                   </button>
                   <button
                     disabled={busy}
                     className="pl-button quiet"
                     onClick={async () => {
                       const reason = window
-                        .prompt("Warum möchtest du dieses Mitglied melden?")
+                        .prompt("Why are you reporting this member?")
                         ?.trim();
                       if (!reason) return;
                       try {
@@ -1517,17 +1517,17 @@ function Profile({
                             reason,
                           }),
                         });
-                        setError("Danke. Deine Meldung wurde übermittelt.");
+                        setError("Thanks. Your report has been submitted.");
                       } catch (problem) {
                         setError(
                           problem instanceof Error
                             ? problem.message
-                            : "Meldung konnte nicht gesendet werden.",
+                            : "Could not submit the report.",
                         );
                       }
                     }}
                   >
-                    Melden
+                    Report
                   </button>
                 </>
               )}
@@ -1536,7 +1536,7 @@ function Profile({
           {edit && (
             <form className="pl-edit-form" onSubmit={save}>
               <label>
-                Anzeigename
+                Display name
                 <input
                   name="displayName"
                   defaultValue={profile.displayName}
@@ -1545,7 +1545,7 @@ function Profile({
                 />
               </label>
               <label>
-                Über mich
+                About me
                 <textarea
                   name="bio"
                   defaultValue={profile.bio ?? ""}
@@ -1553,23 +1553,23 @@ function Profile({
                 />
               </label>
               <button className="pl-button primary" disabled={busy}>
-                {busy ? "Speichert …" : "Änderungen speichern"}
+                {busy ? "Saving …" : "Save changes"}
               </button>
             </form>
           )}
           <section className="pl-profile-posts">
-            <h2>Geteilte Notizen</h2>
+            <h2>Shared notes</h2>
             {posts.length
               ? posts.map((post) => (
                   <PostCard key={post.id} post={post} currentUser={current} />
                 ))
               : !loading && (
-                  <p className="pl-muted">Noch keine Notizen veröffentlicht.</p>
+                  <p className="pl-muted">No notes published yet.</p>
                 )}
           </section>
           {own && relationships.blocked.length > 0 && (
             <section className="pl-blocked pl-own-blocked">
-              <h2>Blockierte Konten</h2>
+              <h2>Blocked accounts</h2>
               {relationships.blocked.map((id) => (
                 <div key={id}>
                   <code>{id}</code>
@@ -1578,7 +1578,7 @@ function Profile({
                     disabled={busy}
                     onClick={() => void unblock(id)}
                   >
-                    Blockierung aufheben
+                    Unblock
                   </button>
                 </div>
               ))}
@@ -1623,7 +1623,7 @@ function Messages({ user }: { user: User }) {
       setError(
         reason instanceof Error
           ? reason.message
-          : "Gespräche konnten nicht geladen werden.",
+          : "Could not load conversations.",
       );
     } finally {
       setLoading(false);
@@ -1654,7 +1654,7 @@ function Messages({ user }: { user: User }) {
       setError(
         reason instanceof Error
           ? reason.message
-          : "Nachrichten konnten nicht geladen werden.",
+          : "Could not load messages.",
       );
     }
   }, [selected]);
@@ -1680,7 +1680,7 @@ function Messages({ user }: { user: User }) {
       setError(
         reason instanceof Error
           ? reason.message
-          : "Ältere Nachrichten konnten nicht geladen werden.",
+          : "Could not load older messages.",
       );
     } finally {
       setOlderLoading(false);
@@ -1704,7 +1704,7 @@ function Messages({ user }: { user: User }) {
       setError(
         reason instanceof Error
           ? reason.message
-          : "Nachricht konnte nicht gesendet werden.",
+          : "Could not send the message.",
       );
     } finally {
       setBusy(false);
@@ -1731,7 +1731,7 @@ function Messages({ user }: { user: User }) {
         ),
       );
       if (!names.length || people.some((person) => !person))
-        throw new Error("Mindestens ein Mitglied wurde nicht gefunden.");
+        throw new Error("At least one member could not be found.");
       const members = people as User[];
       const result = await api<{ conversation: Conversation }>(
         "/conversations",
@@ -1760,7 +1760,7 @@ function Messages({ user }: { user: User }) {
       setError(
         reason instanceof Error
           ? reason.message
-          : "Gespräch konnte nicht begonnen werden.",
+          : "Could not start the conversation.",
       );
     } finally {
       setBusy(false);
@@ -1771,34 +1771,34 @@ function Messages({ user }: { user: User }) {
   return (
     <>
       <PageHeading
-        eyebrow="DIREKTE GESPRÄCHE"
-        title="Gespräche, die bleiben."
-        subtitle="Ein privater Austausch zwischen dir und deinem Netzwerk."
+        eyebrow="DIRECT MESSAGES"
+        title="Conversations that last."
+        subtitle="A private space to talk with your network."
       />
       <div className="pl-messages">
         <section className="pl-conversation-list">
           <form className="pl-start-chat" onSubmit={start}>
-            <label htmlFor="recipient">Neues Gespräch</label>
+            <label htmlFor="recipient">New conversation</label>
             <div>
               <input
                 id="recipient"
                 value={recipient}
                 onChange={(event) => setRecipient(event.target.value)}
-                placeholder="Benutzername(n)"
+                placeholder="Username(s)"
               />
               <button
                 className="pl-button outline"
                 disabled={busy || !recipient.trim()}
               >
-                Starten
+                Start
               </button>
             </div>
             <small className="pl-muted">
-              Für eine Gruppe: mehrere Benutzernamen mit Komma trennen.
+              For a group, separate usernames with commas.
             </small>
           </form>
-          <h2>Deine Gespräche</h2>
-          {loading && <p className="pl-muted">Lädt …</p>}
+          <h2>Your conversations</h2>
+          {loading && <p className="pl-muted">Loading …</p>}
           {items.map((item) => {
             const other = item.members.find((person) => person.id !== user.id);
             return (
@@ -1814,22 +1814,22 @@ function Messages({ user }: { user: User }) {
                 <Avatar user={other ?? item.members[0]} size="small" />
                 <span>
                   <strong>
-                    {item.name || other?.displayName || "Gespräch"}
+                    {item.name || other?.displayName || "Conversation"}
                   </strong>
                   <small>
                     {other && item.members.length === 2
                       ? `@${other.username}`
-                      : `${item.members.length} Mitglieder`}
+                      : `${item.members.length} Members`}
                   </small>
                 </span>
               </button>
             );
           })}
           {!loading && items.length === 0 && (
-            <p className="pl-muted">Noch keine Gespräche.</p>
+            <p className="pl-muted">No conversations yet.</p>
           )}
         </section>
-        <section className="pl-chat" aria-label="Nachrichten">
+        <section className="pl-chat" aria-label="Messages">
           <header>
             {peer ? (
               <>
@@ -1838,7 +1838,7 @@ function Messages({ user }: { user: User }) {
                   <strong>{active?.name || peer.displayName}</strong>
                   <small>
                     {active && active.members.length > 2
-                      ? `${active.members.length} Mitglieder`
+                      ? `${active.members.length} Members`
                       : `@${peer.username}`}
                   </small>
                 </div>
@@ -1846,11 +1846,11 @@ function Messages({ user }: { user: User }) {
                   className="pl-text-button pl-refresh"
                   onClick={() => void loadMessages()}
                 >
-                  Aktualisieren
+                  Refresh
                 </button>
               </>
             ) : (
-              <p>Wähle ein Gespräch oder beginne ein neues.</p>
+              <p>Choose a conversation or start a new one.</p>
             )}
           </header>
           {error && <Notice>{error}</Notice>}
@@ -1861,7 +1861,7 @@ function Messages({ user }: { user: User }) {
                 disabled={olderLoading}
                 onClick={() => void loadOlderMessages()}
               >
-                {olderLoading ? "Lädt …" : "Ältere Nachrichten laden"}
+                {olderLoading ? "Loading …" : "Load older messages"}
               </button>
             )}
             {messages.map((message) => (
@@ -1880,28 +1880,28 @@ function Messages({ user }: { user: User }) {
             ))}
             {active && messages.length === 0 && (
               <Empty
-                title="Der Anfang eines Gesprächs."
-                body="Schreib eine erste Nachricht."
+                title="A conversation begins here."
+                body="Send the first message."
               />
             )}
           </div>
           <form className="pl-message-compose" onSubmit={send}>
             <label className="sr-only" htmlFor="message-text">
-              Deine Nachricht
+              Your message
             </label>
             <textarea
               id="message-text"
               value={text}
               onChange={(event) => setText(event.target.value)}
               maxLength={4000}
-              placeholder="Schreib eine Nachricht …"
+              placeholder="Write a message …"
               disabled={!active}
             />
             <button
               className="pl-button primary"
               disabled={!active || busy || !text.trim()}
             >
-              {busy ? "Sendet …" : "Senden"}
+              {busy ? "Sending …" : "Send"}
             </button>
           </form>
         </section>

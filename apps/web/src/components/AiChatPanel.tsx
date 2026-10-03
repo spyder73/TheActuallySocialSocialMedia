@@ -89,7 +89,7 @@ export default function AiChatPanel({ postId }: { postId: string }) {
       }
     } catch (err) {
       setError(
-        err instanceof ApiError ? err.message : "Anfrage an den KI-Anbieter fehlgeschlagen"
+        err instanceof ApiError ? err.message : "Request to AI provider failed"
       );
     } finally {
       setLoading(false);
@@ -129,7 +129,7 @@ export default function AiChatPanel({ postId }: { postId: string }) {
       );
     } catch (err) {
       setError(
-        err instanceof ApiError ? err.message : "Anfrage an den KI-Anbieter fehlgeschlagen"
+        err instanceof ApiError ? err.message : "Request to AI provider failed"
       );
     } finally {
       setLoading(false);
@@ -173,7 +173,7 @@ export default function AiChatPanel({ postId }: { postId: string }) {
                 <textarea
                   value={customPrompt}
                   onChange={(e) => setCustomPrompt(e.target.value)}
-                  placeholder="Was möchtest du zu diesem Post wissen?"
+                  placeholder="What would you like to know about this post?"
                   className="rounded border p-1"
                   rows={2}
                 />
@@ -185,7 +185,7 @@ export default function AiChatPanel({ postId }: { postId: string }) {
                     checked={shareResult}
                     onChange={(e) => setShareResult(e.target.checked)}
                   />
-                  Ergebnis anonym teilen (hilft anderen, Vertrauen aufzubauen)
+                  Share result anonymously (helps others build trust)
                 </label>
               )}
               <button
@@ -193,7 +193,7 @@ export default function AiChatPanel({ postId }: { postId: string }) {
                 disabled={loading}
                 className={`self-start rounded px-3 py-1 text-white disabled:opacity-50 ${MODE_CONFIG[activeMode].colorClass}`}
               >
-                {loading ? "…" : "Starten"}
+                {loading ? "…" : "Start"}
               </button>
             </div>
           )}
@@ -226,7 +226,7 @@ export default function AiChatPanel({ postId }: { postId: string }) {
                   disabled={loading}
                   className={`shrink-0 rounded px-2 py-1 text-white disabled:opacity-50 ${MODE_CONFIG[activeMode].colorClass}`}
                 >
-                  {loading ? "…" : "Senden"}
+                  {loading ? "…" : "Send"}
                 </button>
               </div>
             </div>

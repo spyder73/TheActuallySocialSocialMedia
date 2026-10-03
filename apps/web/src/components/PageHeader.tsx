@@ -11,7 +11,7 @@ export default function PageHeader({ title }: { title: string }) {
           @{user?.username}
         </Link>
         <button onClick={() => logout()} className="underline">
-          Abmelden
+          Sign out
         </button>
       </div>
     </header>

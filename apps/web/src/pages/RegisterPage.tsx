@@ -20,7 +20,7 @@ export default function RegisterPage() {
       navigate("/");
     } catch (err) {
       setError(
-        err instanceof ApiError ? err.message : "Registrierung fehlgeschlagen"
+        err instanceof ApiError ? err.message : "Registration failed"
       );
     }
   }
@@ -32,7 +32,7 @@ export default function RegisterPage() {
         <form onSubmit={onSubmit} className="flex flex-col gap-3">
           <input
             type="email"
-            placeholder="E-Mail"
+            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className={input}
@@ -40,7 +40,7 @@ export default function RegisterPage() {
           />
           <input
             type="text"
-            placeholder="Nutzername"
+            placeholder="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             className={input}
@@ -48,7 +48,7 @@ export default function RegisterPage() {
           />
           <input
             type="password"
-            placeholder="Passwort (min. 8 Zeichen)"
+            placeholder="Password (at least 8 characters)"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className={input}
@@ -56,13 +56,13 @@ export default function RegisterPage() {
           />
           {error && <p className="text-sm text-red-600">{error}</p>}
           <button type="submit" className={btnPrimary}>
-            Konto erstellen
+            Create account
           </button>
         </form>
         <p className="mt-4 text-sm text-gray-500">
-          Schon ein Konto?{" "}
+          Already have an account?{" "}
           <Link to="/login" className="font-medium text-black hover:underline">
-            Anmelden
+            Sign in
           </Link>
         </p>
       </div>

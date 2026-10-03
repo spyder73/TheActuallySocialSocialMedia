@@ -22,7 +22,7 @@ export default function PostCard({
   const isOwn = currentUserId && post.author.id === currentUserId;
 
   async function onDelete() {
-    if (!confirm("Diesen Post wirklich unwiderruflich löschen?")) return;
+    if (!confirm("Permanently delete this post?")) return;
     await apiFetch(`/posts/${post.id}`, { method: "DELETE" });
     onDeleted?.(post.id);
   }
@@ -43,7 +43,7 @@ export default function PostCard({
         </div>
         {isOwn && (
           <button onClick={() => void onDelete()} className={btnDanger}>
-            Löschen
+            Delete
           </button>
         )}
       </div>
@@ -56,9 +56,9 @@ export default function PostCard({
         />
       )}
       <div className="mt-3 flex items-center gap-3 text-xs text-gray-400">
-        <span>{new Date(post.createdAt).toLocaleString("de-DE")}</span>
+        <span>{new Date(post.createdAt).toLocaleString("en-GB")}</span>
         <Link to={`/post/${post.id}`} className="font-medium text-gray-600 hover:underline">
-          {post.replyCount > 0 ? `${post.replyCount} Antworten` : "Antworten"}
+          {post.replyCount > 0 ? `${post.replyCount} Replies` : "Replies"}
         </Link>
       </div>
       <FactCheckTransparency postId={post.id} />

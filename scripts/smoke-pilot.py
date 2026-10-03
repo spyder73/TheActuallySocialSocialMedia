@@ -65,16 +65,16 @@ def main():
         people.append((c, user, email, password))
     a, b, c = [p[0] for p in people]
     aid, bid, cid = [p[1]['id'] for p in people]
-    public = request(a, 'POST', '/posts', {'text': 'Gemeinsam beginnt hier etwas Neues.', 'visibility': 'public'}, status=201)['post']
-    private = request(a, 'POST', '/posts', {'text': 'Nur für enge Freunde.', 'visibility': 'close_friends'}, status=201)['post']
+    public = request(a, 'POST', '/posts', {'text': 'Something new starts here, together.', 'visibility': 'public'}, status=201)['post']
+    private = request(a, 'POST', '/posts', {'text': 'Only for close friends.', 'visibility': 'close_friends'}, status=201)['post']
     request(b, 'GET', '/posts/' + private['id'], status=404)
     request(a, 'PUT', '/relationships/close_friend/' + bid, status=204)
     assert request(b, 'GET', '/posts/' + private['id'])['post']['id'] == private['id']
     request(c, 'GET', '/posts/' + private['id'], status=404)
-    request(b, 'POST', '/posts/' + public['id'] + '/comments', {'text': 'Ein guter Anfang.'}, status=201)
+    request(b, 'POST', '/posts/' + public['id'] + '/comments', {'text': 'A good start.'}, status=201)
     request(c, 'DELETE', '/posts/' + public['id'], status=404)
     conv = request(a, 'POST', '/conversations', {'memberIds': [bid]}, status=201)['conversation']
-    request(a, 'POST', '/conversations/' + conv['id'] + '/messages', {'text': 'Privat und gemeinsam.'}, status=201)
+    request(a, 'POST', '/conversations/' + conv['id'] + '/messages', {'text': 'Private and shared.'}, status=201)
     assert len(request(b, 'GET', '/conversations/' + conv['id'] + '/messages')['messages']) == 1
     request(c, 'GET', '/conversations/' + conv['id'] + '/messages', status=404)
     request(b, 'PUT', '/relationships/block/' + aid, status=204)

@@ -90,12 +90,10 @@ export default function AiSettingsPage() {
 
   return (
     <div className="mx-auto max-w-lg px-4 py-8">
-      <PageHeader title="FactCheck-KI" />
+      <PageHeader title="Fact-checking AI" />
       <NavBar />
       <p className="mb-4 text-sm text-gray-500">
-        Eigene Provider hinterlegen — z.B. OpenAI, ein lokales Ollama-Modell
-        (OpenAI-kompatible API) oder Anthropic. API-Keys werden verschlüsselt
-        gespeichert.
+        Configure your own provider, such as OpenAI, a local Ollama model (OpenAI-compatible API), or Anthropic. API keys are encrypted at rest.
       </p>
 
       <div className="mb-6 flex flex-col gap-2">
@@ -106,20 +104,20 @@ export default function AiSettingsPage() {
                 <span className="font-medium">{p.label}</span>{" "}
                 <span className="text-gray-500">({p.type}, {p.model})</span>
                 {p.isDefault && (
-                  <span className="ml-2 rounded-full bg-yellow-100 px-2 py-0.5 text-xs">Standard</span>
+                  <span className="ml-2 rounded-full bg-yellow-100 px-2 py-0.5 text-xs">Default</span>
                 )}
               </div>
               <div className="flex gap-3 text-xs">
                 {!p.isDefault && (
                   <button onClick={() => void onSetDefault(p.id)} className="underline">
-                    Als Standard setzen
+                    Set as default
                   </button>
                 )}
                 <button onClick={() => startEdit(p)} className="underline">
-                  Bearbeiten
+                  Edit
                 </button>
                 <button onClick={() => void onDelete(p.id)} className={btnDanger}>
-                  Löschen
+                  Delete
                 </button>
               </div>
             </div>
@@ -134,22 +132,22 @@ export default function AiSettingsPage() {
                 <input
                   value={editModel}
                   onChange={(e) => setEditModel(e.target.value)}
-                  placeholder="Modellname"
+                  placeholder="Model name"
                   className={`${input} text-xs`}
                 />
                 <input
                   value={editApiKey}
                   onChange={(e) => setEditApiKey(e.target.value)}
-                  placeholder="Neuer API-Key (leer = unverändert)"
+                  placeholder="New API key (leave blank to keep unchanged)"
                   type="password"
                   className={`${input} text-xs`}
                 />
                 <div className="flex justify-end gap-2">
                   <button onClick={() => setEditingId(null)} className={btnSecondary}>
-                    Abbrechen
+                    Cancel
                   </button>
                   <button onClick={() => void saveEdit(p.id)} className={btnPrimary}>
-                    Speichern
+                    Save
                   </button>
                 </div>
               </div>
@@ -157,7 +155,7 @@ export default function AiSettingsPage() {
           </div>
         ))}
         {providers.length === 0 && (
-          <p className="text-sm text-gray-400">Noch kein Provider hinterlegt.</p>
+          <p className="text-sm text-gray-400">No provider configured yet.</p>
         )}
       </div>
 
@@ -165,7 +163,7 @@ export default function AiSettingsPage() {
         <input
           value={label}
           onChange={(e) => setLabel(e.target.value)}
-          placeholder="Name (z.B. 'Mein lokales Llama')"
+          placeholder="Name (e.g. 'My local Llama')"
           className={input}
           required
         />
@@ -183,21 +181,21 @@ export default function AiSettingsPage() {
         <input
           value={baseUrl}
           onChange={(e) => setBaseUrl(e.target.value)}
-          placeholder="Base URL (z.B. http://localhost:11434/v1 für Ollama)"
+          placeholder="Base URL (e.g. http://localhost:11434/v1 for Ollama)"
           className={input}
           required
         />
         <input
           value={model}
           onChange={(e) => setModel(e.target.value)}
-          placeholder="Modellname (z.B. llama3, gpt-4o-mini, claude-3-5-sonnet)"
+          placeholder="Model name (e.g. llama3, gpt-4o-mini, claude-3-5-sonnet)"
           className={input}
           required
         />
         <input
           value={apiKey}
           onChange={(e) => setApiKey(e.target.value)}
-          placeholder="API-Key (leer lassen für lokales Ollama ohne Auth)"
+          placeholder="API key (leave blank for local Ollama without authentication)"
           type="password"
           className={input}
         />
@@ -207,10 +205,10 @@ export default function AiSettingsPage() {
             checked={isDefault}
             onChange={(e) => setIsDefault(e.target.checked)}
           />
-          Als Standard verwenden
+          Use as default
         </label>
         <button className="self-end rounded bg-black px-4 py-2 text-sm text-white">
-          Hinzufügen
+          Add
         </button>
       </form>
     </div>

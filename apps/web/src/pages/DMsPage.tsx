@@ -108,10 +108,10 @@ export default function DMsPage() {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-8">
-      <PageHeader title="Nachrichten" />
+      <PageHeader title="Messages" />
       <NavBar />
       <p className="mb-4 text-xs text-gray-400">
-        Hinweis: Nachrichten sind serverseitig gespeichert, aktuell noch ohne Ende-zu-Ende-Verschlüsselung.
+        Note: Messages are stored on the server and are not yet end-to-end encrypted.
       </p>
 
       <div className="flex gap-6">
@@ -135,7 +135,7 @@ export default function DMsPage() {
               <input
                 value={newUsername}
                 onChange={(e) => setNewUsername(e.target.value)}
-                placeholder="Nutzername"
+                placeholder="Username"
                 className={`${input} w-full`}
               />
               <button className={btnSecondary}>+</button>
@@ -146,16 +146,16 @@ export default function DMsPage() {
               <input
                 value={groupName}
                 onChange={(e) => setGroupName(e.target.value)}
-                placeholder="Gruppenname (optional)"
+                placeholder="Group name (optional)"
                 className={input}
               />
               <input
                 value={groupUsernames}
                 onChange={(e) => setGroupUsernames(e.target.value)}
-                placeholder="Nutzernamen, mit Komma getrennt"
+                placeholder="Usernames, separated by commas"
                 className={input}
               />
-              <button className={btnSecondary}>Gruppe erstellen</button>
+              <button className={btnSecondary}>Create group</button>
             </form>
           )}
           <div className="flex flex-col gap-2">
@@ -204,7 +204,7 @@ export default function DMsPage() {
         </div>
 
         <div className="flex-1">
-          {!activeId && <p className="text-sm text-gray-400">Konversation auswählen.</p>}
+          {!activeId && <p className="text-sm text-gray-400">Select a conversation.</p>}
           {activeId && (
             <>
               <div className={`${card} mb-3 flex max-h-96 flex-col gap-2 overflow-y-auto`}>
@@ -221,17 +221,17 @@ export default function DMsPage() {
                   </div>
                 ))}
                 {messages.length === 0 && (
-                  <p className="text-xs text-gray-400">Noch keine Nachrichten.</p>
+                  <p className="text-xs text-gray-400">No messages yet.</p>
                 )}
               </div>
               <form onSubmit={(e) => void sendMessage(e)} className="flex gap-2">
                 <input
                   value={messageText}
                   onChange={(e) => setMessageText(e.target.value)}
-                  placeholder="Nachricht…"
+                  placeholder="Message…"
                   className={`${input} w-full`}
                 />
-                <button className={btnPrimary}>Senden</button>
+                <button className={btnPrimary}>Send</button>
               </form>
             </>
           )}
