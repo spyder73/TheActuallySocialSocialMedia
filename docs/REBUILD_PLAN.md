@@ -1,6 +1,6 @@
 # TASSM rebuild plan
 
-Status: Go/container foundation and isolated frontend preview implemented; private pilot still in progress.
+Status: invitation-only text pilot implemented and locally rehearsed; full social parity and live Alethea remain in progress.
 Date: 2026-10-03.
 
 ## Confirmed direction
@@ -113,7 +113,7 @@ Actual VPS publishing requires the host, SSH access and a domain/DNS configurati
 
 ## Deployment experience to deliver
 
-Target operator flow (commands/scripts will be implemented, not currently available):
+Operator flow for the text pilot (implemented; see DEPLOY.md for exact commands):
 
 1. Install Docker Engine with Compose on the Linux VPS; point a domain to it.
 2. Clone the repository and run a bootstrap command that generates unique secrets and asks for the domain.
@@ -139,10 +139,9 @@ The three initial planning reviews used inherited models. Future bounded impleme
 
 ## Current state and remaining inputs
 
-The Go health/readiness service, checksum-verified SQL baseline, isolated container foundation and dark/light interactive frontend preview are implemented. See `FOUNDATION.md` for exact scope and commands. Go unit/race/integration checks, container build/startup and browser checks have passed locally. CI checks are defined separately. The preview is excluded from normal production bundles and uses fictional, local-only data.
+The Go container foundation, invitation-only accounts, secure revocable sessions, text social API, and live dark/light frontend are implemented. The text pilot includes profiles, member feed, comments/replies, relationships, bilateral blocking, reports, and private/group conversations. See `FOUNDATION.md` for verification details and `DEPLOY.md` for the shipped operator guide. Encrypted backup and restoration were rehearsed with all 20 public tables matching. The installation starts empty; no default account/password is seeded.
 
-Invitation accounts, Go social endpoints, private media integration, live Alethea checking, complete API contracts/generated clients, backups and the VPS release rehearsal remain. The original Node accounts still use Argon2 with open registration and JWT logout without server-side revocation; they are not the planned private-pilot authentication system. Docker was started for the local foundation rehearsal; no VPS has been deployed.
-
+Remaining: private media, stories/snaps, live Alethea checking and durable jobs, AI-provider settings/secret migration, complete API contracts/generated clients, SSE, and full legacy feature parity. The Node implementation stays in the repository. A real VPS/DNS/TLS and scheduled off-host backup destination are not yet configured.
 Confirmed: invitation-only, standard account security, one small Linux VPS. Provider/domain and off-host backup destination can be supplied at deployment time. Existing data preservation is the default even if the first pilot starts empty.
 
 References: [Codex subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents), [Compose in production](https://docs.docker.com/compose/how-tos/production/), [Caddy automatic HTTPS](https://caddyserver.com/docs/automatic-https).

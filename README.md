@@ -1,4 +1,14 @@
-# Interactive Social Media
+# TASSM — The Actually Social Social Media
+
+## Invitation-only Go pilot
+
+The `rebuild/go-pilot` branch now runs a **text-first private pilot** with a Go API, React dark/light frontend, PostgreSQL, and Docker Compose/Caddy. Start with the **[deployment guide](docs/DEPLOY.md)** for VPS setup, owner invitations, encrypted backups, restore, and upgrades. [Release scope and verification](docs/FOUNDATION.md) and the [rebuild plan](docs/REBUILD_PLAN.md) describe the remaining milestones.
+
+This pilot supports secure invitation accounts, posts/comments, profiles, close friends, blocking/reporting, and direct/group text conversations. It does **not yet** include legacy media/stories/snaps or live AI/fact-checking. The Node source remains for the ongoing migration; the live frontend now targets the Go API.
+
+The material below documents the original prototype and its broader feature set.
+
+# Original prototype reference
 
 Open-source social media: text/image posts, stories, snaps, DMs — **strictly chronological feed, no ranking algorithm, no ads**, with a freely choosable FactCheck/Explain/Ask AI (bring your own API keys, including local Ollama models).
 
@@ -18,7 +28,7 @@ A social media prototype for anyone who wants the strengths of Twitter (threads,
 
 ## Status
 
-Core MVP features are implemented and manually tested (see above). There are **no automated tests** — `vitest` is set up as a devDependency in `apps/api`, but no test files exist yet. There is **no CI pipeline**.
+The original Node MVP was manually tested. The Go pilot now has unit/race/database integration tests and CI covering frontend builds, container startup, account/social smoke checks, and encrypted backup/restore. See the pilot release notes above for current limitations.
 
 See [Open Items](#open-items) for known limitations and next steps.
 

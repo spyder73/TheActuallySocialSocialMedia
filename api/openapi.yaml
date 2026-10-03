@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: TASSM Go API
   version: 0.1.0
-  description: Foundation contract. Social and account endpoints are not yet migrated.
+  description: Partial probe contract. The implemented account and social endpoint inventory is documented in apps/api-go/README.md; generated full contracts remain pending.
 servers:
   - url: /api
 paths:
