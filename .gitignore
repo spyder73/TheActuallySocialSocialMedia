@@ -48,3 +48,7 @@ Thumbs.db
 .env.local
 .secrets/
 artifacts/
+backups/
+*.age
+
+__pycache__/
