@@ -1,4 +1,4 @@
-name: Rebuild foundation
+name: Private pilot
 on:
   push:
   pull_request:
@@ -51,11 +51,26 @@ jobs:
           VITE_ENABLE_PREVIEW: 'true'
   containers:
     runs-on: ubuntu-latest
+    env:
+      COMPOSE_PROJECT_NAME: tassm-smoke
+      APP_ORIGIN: http://localhost:18081
+      HTTP_PORT: '18081'
+      HTTPS_PORT: '18444'
     steps:
       - uses: actions/checkout@v4
       - run: sh scripts/bootstrap-pilot.sh --local
       - run: docker compose --env-file .env.pilot -f compose.pilot.yaml up -d --build --wait
-      - run: curl --fail --retry 5 --retry-all-errors http://localhost:18080/api/readyz
+      - run: curl --fail --retry 5 --retry-all-errors http://localhost:18081/api/readyz
+      - run: python3 scripts/smoke-pilot.py
+      - name: Rehearse encrypted backup and restoration
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y age
+          age-keygen -o "$RUNNER_TEMP/backup-identity"
+          recipient=$(age-keygen -y "$RUNNER_TEMP/backup-identity")
+          scripts/backup-pilot.sh "$recipient" "$RUNNER_TEMP/pilot.age"
+          scripts/restore-pilot.sh "$RUNNER_TEMP/pilot.age" "$RUNNER_TEMP/backup-identity" tassm_restore_ci
+          python3 scripts/verify-restored-pilot.py tassm_restore_ci
       - if: failure()
         run: docker compose --env-file .env.pilot -f compose.pilot.yaml logs --tail=100
       - if: always()
