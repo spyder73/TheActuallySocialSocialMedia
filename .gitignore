@@ -46,3 +46,5 @@ Thumbs.db
 *.tar.gz
 *.zip
 .env.local
+.secrets/
+artifacts/

@@ -1,0 +1,108 @@
+# Foundation checkpoint: social/auth migration is not complete yet.
+name: tassm-pilot
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+x-api: &api
+  image: tassm-api:local
+  build:
+    context: .
+    dockerfile: infra/Dockerfile.api
+  environment:
+    DATABASE_URL_FILE: /run/secrets/database_url
+    LISTEN_ADDR: :8080
+  secrets:
+    - database_url
+  networks:
+    - backend
+  read_only: true
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+  logging: *logging
+
+services:
+  postgres:
+    image: postgres:16-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea
+    environment:
+      POSTGRES_USER: tassm
+      POSTGRES_DB: tassm
+      POSTGRES_PASSWORD_FILE: /run/secrets/database_password
+    secrets:
+      - database_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tassm -d tassm"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+    logging: *logging
+
+  migrate:
+    <<: *api
+    entrypoint: ["/app/migrate"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  api:
+    <<: *api
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "/app/api", "healthcheck"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  web:
+    image: tassm-web:local
+    build:
+      context: .
+      dockerfile: infra/Dockerfile.web
+      args:
+        ENABLE_PREVIEW: ${ENABLE_PREVIEW:-false}
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS:?Run scripts/bootstrap-pilot.sh first}
+    ports:
+      - "${BIND_ADDRESS:-127.0.0.1}:${HTTP_PORT:-18080}:80"
+      - "${BIND_ADDRESS:-127.0.0.1}:${HTTPS_PORT:-18443}:443"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - edge
+      - backend
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+    logging: *logging
+
+networks:
+  edge:
+  backend:
+    internal: true
+
+volumes:
+  postgres_data:
+  caddy_data:
+  caddy_config:
+
+secrets:
+  database_password:
+    file: ./.secrets/database_password
+  database_url:
+    file: ./.secrets/database_url
