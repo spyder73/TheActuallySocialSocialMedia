@@ -1,4 +1,4 @@
-# TASSM rebuild plan
+# Phase rebuild plan
 
 Status: invitation-only text pilot implemented and locally rehearsed; full social parity and live Alethea remain in progress.
 Date: 2026-10-03.
@@ -36,19 +36,19 @@ SSE is sufficient for the current notification behavior; Socket.IO must be repla
 
 Alethea stays an optional deployment profile so ordinary social use works without AI/search credentials or during an outage. External provider keys are needed to perform live checks. No local LLM hosting is assumed on the small VPS.
 
-## Visual direction: After Hours Editorial
+## Visual direction: Phase
 
-A serious private social space with the typography and composition of a contemporary journal.
+A modern, compact social feed inspired by X’s density and Anonymous’s monochrome, independent spirit. Original Phase branding; no affiliation or anonymity claims.
 
 | Element | Initial design specification |
 | --- | --- |
-| Dark | Ink canvas #0D1117, slate surfaces #151B23, warm foreground #ECEEEA, restrained teal #85C9BE |
-| Light | Warm paper #F5F4EF, pale surfaces, charcoal text, deeper teal #246C62 |
-| Type | Self-hosted readable sans for UI/body; editorial serif used sparingly for large page headings; verify font licenses |
+| Dark | Near-black canvas, neutral surfaces, high-contrast white type |
+| Light | Clean white canvas, cool grey surfaces, black type |
+| Type | Bold system sans for headings and body; monospace for compact metadata; no serif typography |
 | Desktop | About 208px navigation, 660–720px feed, optional 280–320px contextual rail; collapse based on available space |
 | Mobile | Full-width feed, bottom navigation, single-view messaging, full-height evidence sheet, safe-area support |
 | Motion | Roughly 120–200ms control feedback and 220–280ms panel transitions; respect reduced motion |
-| Signature | Chronological date markers, expressive headings, deliberate image framing, calm caught-up ending |
+| Signature | Original slash mark, crisp dividers, dense posts, direct language, restrained technical details |
 
 Colors are starting points, subject to contrast testing. All components use semantic tokens; theme preference persists without an initial flash. Use English throughout the product and project: UI, documentation, code comments, examples, fixtures, and default AI responses. Centralize UI labels for future localization.
 

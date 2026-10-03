@@ -143,9 +143,9 @@ function Empty({
   return (
     <div className="pl-empty">
       <span className="pl-seal" aria-hidden="true">
-        ✳
+        //
       </span>
-      <p className="pl-kicker">EIN KLEINER ANFANG</p>
+      <p className="pl-kicker">START THE CONVERSATION</p>
       <h2>{title}</h2>
       <p>{body}</p>
       {children}
@@ -191,7 +191,7 @@ export default function PilotApp() {
       .catch((error) => {
         if (active && !(error instanceof HttpError && error.status === 401))
           setAuthError(
-            "The TASSM service is currently unavailable. Please try again later.",
+            "The Phase service is currently unavailable. Please try again later.",
           );
       })
       .finally(() => {
@@ -214,7 +214,7 @@ export default function PilotApp() {
   if (authLoading)
     return (
       <div className="pl-loading" role="status">
-        Opening your private space …
+        Opening Phase …
       </div>
     );
   const isAuthRoute = ["/login", "/register", "/reset"].includes(
@@ -334,15 +334,15 @@ function AuthScreen({
         ? "Your space is ready."
         : "A fresh start.";
   return (
-    <main className="pl-auth" data-theme="system">
+    <main className="pl-auth" data-theme="dark">
       <section className="pl-auth-card">
         <Link to="/login" className="pl-brand">
-          <span className="pl-brand-mark">✳</span>TASSM
+          <span className="pl-brand-mark">//</span><strong>Phase</strong>
         </Link>
-        <p className="pl-kicker">A PRIVATE SPACE FOR REAL CONVERSATION</p>
+        <p className="pl-kicker">A SOCIAL FEED FOR REAL CONVERSATION</p>
         <h1>{title}</h1>
         <p className="pl-auth-intro">
-          Ideas worth thinking about. A place for people who know each other.
+          A place to follow people, share ideas, and stay in the conversation.
         </p>
         {error && <Notice>{error}</Notice>}
         {done && (
@@ -469,7 +469,7 @@ function Shell({
 }) {
   const location = useLocation();
   const nav = [
-    { to: "/", label: "Reading room", icon: "⌂" },
+    { to: "/", label: "Feed", icon: "⌂" },
     { to: "/members", label: "Members", icon: "◎" },
     { to: "/messages", label: "Conversations", icon: "↗" },
     { to: `/u/${user.username}`, label: "My profile", icon: "◌" },
@@ -479,10 +479,10 @@ function Shell({
       <div className="pl-layout">
         <aside className="pl-sidebar">
           <Link to="/" className="pl-brand">
-            <span className="pl-brand-mark">✳</span>TASSM
+            <span className="pl-brand-mark">//</span><strong>Phase</strong>
           </Link>
           <p className="pl-sidebar-caption">
-            A PRIVATE SPACE TO READ AND TALK
+            POSTS FROM YOUR NETWORK
           </p>
           <nav className="pl-nav" aria-label="Main navigation">
             {nav.map((item) => (
@@ -502,8 +502,8 @@ function Shell({
             ))}
           </nav>
           <div className="pl-sidebar-note">
-            <span aria-hidden="true">✳</span>
-            <p>A small place for conversation and thoughtful listening.</p>
+            <span aria-hidden="true">//</span>
+            <p>Posts from your network, in order.</p>
           </div>
           <div className="pl-sidebar-bottom">
             <Link to={`/u/${user.username}`} className="pl-self">
@@ -521,7 +521,7 @@ function Shell({
         <main className="pl-main">
           <header className="pl-mobile-head">
             <Link to="/" className="pl-brand">
-              <span className="pl-brand-mark">✳</span>TASSM
+              <span className="pl-brand-mark">//</span><strong>Phase</strong>
             </Link>
             <div className="pl-mobile-head-actions">
               <button
@@ -537,7 +537,7 @@ function Shell({
             </div>
           </header>
           <div className="pl-main-toolbar">
-            <span className="pl-kicker">YOUR PRIVATE SPACE</span>
+            <span className="pl-kicker">THE FEED</span>
             <button className="pl-theme" onClick={onTheme}>
               ◐{" "}
               <span>
@@ -555,7 +555,7 @@ function Shell({
         <aside className="pl-rail">
           <div className="pl-rail-card">
             <p className="pl-kicker">WHAT TO EXPECT</p>
-            <h2>A quieter pace.</h2>
+            <h2>Your network.</h2>
             <p>
               Posts appear in chronological order across the network. No rankings and
               no fabricated activity.
@@ -564,7 +564,7 @@ function Shell({
           <div className="pl-rail-foot">
             Invitation-only access
             <br />
-            TASSM · {new Date().getFullYear()}
+            Phase · {new Date().getFullYear()}
           </div>
         </aside>
       </div>
@@ -707,14 +707,14 @@ function Feed({ user }: { user: User }) {
     <>
       <PageHeading
         eyebrow="CHRONOLOGICAL · NO RANKINGS"
-        title="The Reading Room"
-        subtitle="Ideas worth thinking about. At your own pace."
+        title="Feed"
+        subtitle="Posts from your network, in chronological order."
         action={
           <button
             className="pl-button primary"
             onClick={() => setComposer(true)}
           >
-            ＋ <span>Write a note</span>
+            ＋ <span>Post</span>
           </button>
         }
       />
@@ -734,14 +734,14 @@ function Feed({ user }: { user: User }) {
         )}
         {!loading && !error && posts.length === 0 && (
           <Empty
-            title="It’s quiet here for now."
-            body="There are no shared notes yet. You can start one."
+            title="No posts here yet."
+            body="No posts yet. Start the conversation."
           >
             <button
               className="pl-button primary"
               onClick={() => setComposer(true)}
             >
-              ＋ Write the first note
+              ＋ Write the first post
             </button>
           </Empty>
         )}
@@ -789,7 +789,7 @@ function Feed({ user }: { user: User }) {
             </header>
             <form onSubmit={publish}>
               <label className="pl-field-label" htmlFor="compose-text">
-                Your note
+                Your post
               </label>
               <textarea
                 id="compose-text"
@@ -797,7 +797,7 @@ function Feed({ user }: { user: User }) {
                 value={text}
                 maxLength={5000}
                 onChange={(event) => setText(event.target.value)}
-                placeholder="Write what you’d like to share …"
+                placeholder="Write a post …"
                 required
               />
               <div className="pl-compose-options">
@@ -829,7 +829,7 @@ function Feed({ user }: { user: User }) {
                   className="pl-button primary"
                   disabled={busy || !text.trim()}
                 >
-                  {busy ? "Publishing …" : "Publish note"}
+                  {busy ? "Publishing …" : "Publish post"}
                 </button>
               </div>
             </form>
@@ -843,7 +843,7 @@ function PostCard({ post, currentUser }: { post: Post; currentUser: User }) {
   const [notice, setNotice] = useState("");
   async function report() {
     const reason = window
-      .prompt("Why are you reporting this note?")
+      .prompt("Why are you reporting this post?")
       ?.trim();
     if (!reason) return;
     try {
@@ -861,7 +861,7 @@ function PostCard({ post, currentUser }: { post: Post; currentUser: User }) {
     }
   }
   async function remove() {
-    if (!window.confirm("Permanently delete this note and its replies?"))
+    if (!window.confirm("Permanently delete this post and its replies?"))
       return;
     try {
       await api(`/posts/${encodeURIComponent(post.id)}`, { method: "DELETE" });
@@ -870,7 +870,7 @@ function PostCard({ post, currentUser }: { post: Post; currentUser: User }) {
       setNotice(
         error instanceof Error
           ? error.message
-          : "Could not delete the note.",
+          : "Could not delete the post.",
       );
     }
   }
@@ -904,7 +904,7 @@ function PostCard({ post, currentUser }: { post: Post; currentUser: User }) {
           </Link>
           {post.author.id === currentUser.id ? (
             <>
-              <span className="pl-by-you">Your note</span>
+              <span className="pl-by-you">Your post</span>
               <button onClick={() => void remove()}>Delete</button>
             </>
           ) : (
@@ -977,7 +977,7 @@ function Thread({ user }: { user: User }) {
   async function report() {
     if (!post) return;
     const reason = window
-      .prompt("Why are you reporting this note?")
+      .prompt("Why are you reporting this post?")
       ?.trim();
     if (!reason) return;
     try {
@@ -997,7 +997,7 @@ function Thread({ user }: { user: User }) {
   async function remove() {
     if (
       !post ||
-      !window.confirm("Permanently delete this note and its replies?")
+      !window.confirm("Permanently delete this post and its replies?")
     )
       return;
     try {
@@ -1007,7 +1007,7 @@ function Thread({ user }: { user: User }) {
       setError(
         problem instanceof Error
           ? problem.message
-          : "Could not delete the note.",
+          : "Could not delete the post.",
       );
     }
   }
@@ -1015,12 +1015,12 @@ function Thread({ user }: { user: User }) {
     <>
       <PageHeading
         eyebrow="THREAD"
-        title="One note, many thoughts."
+        title="Post thread"
         subtitle="Replies stay where the conversation began."
       />
       <div className="pl-thread">
         <Link className="pl-back-link" to="/">
-          ← Back to the Reading Room
+          ← Back to the feed
         </Link>
         {loading && (
           <p role="status" className="pl-inline-loading">
@@ -1041,9 +1041,9 @@ function Thread({ user }: { user: User }) {
               <p className="pl-post-text">{post.text}</p>
               <div className="pl-post-actions">
                 {post.author.id === user.id ? (
-                  <button onClick={() => void remove()}>Delete note</button>
+                  <button onClick={() => void remove()}>Delete post</button>
                 ) : (
-                  <button onClick={() => void report()}>Report note</button>
+                  <button onClick={() => void report()}>Report post</button>
                 )}
               </div>
             </article>
@@ -1243,7 +1243,7 @@ function Members({ user }: { user: User }) {
                 aria-label={`${relationships.closeFriends.includes(person.id) ? "Remove from close friends" : "Add to close friends"}: ${person.displayName}`}
                 title="Close friends"
               >
-                ✳
+                //
               </button>
               <button
                 className="pl-button quiet"
@@ -1489,7 +1489,7 @@ function Profile({
                     onClick={() => void relationship("close_friend")}
                     aria-label="Toggle close-friend status"
                   >
-                    ✳
+                    //
                   </button>
                   <button
                     disabled={busy}
@@ -1558,13 +1558,13 @@ function Profile({
             </form>
           )}
           <section className="pl-profile-posts">
-            <h2>Shared notes</h2>
+            <h2>Posts</h2>
             {posts.length
               ? posts.map((post) => (
                   <PostCard key={post.id} post={post} currentUser={current} />
                 ))
               : !loading && (
-                  <p className="pl-muted">No notes published yet.</p>
+                  <p className="pl-muted">No posts yet.</p>
                 )}
           </section>
           {own && relationships.blocked.length > 0 && (
@@ -1773,7 +1773,7 @@ function Messages({ user }: { user: User }) {
       <PageHeading
         eyebrow="DIRECT MESSAGES"
         title="Conversations that last."
-        subtitle="A private space to talk with your network."
+        subtitle="A feed for posts and conversation."
       />
       <div className="pl-messages">
         <section className="pl-conversation-list">

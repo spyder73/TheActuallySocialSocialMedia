@@ -21,7 +21,7 @@ export default function NavBar() {
         </NavLink>
       </div>
       <NavLink to="/settings/ai" className={secondaryLinkClass}>
-        FactCheck-KI
+        FactCheck AI
       </NavLink>
     </nav>
   );
