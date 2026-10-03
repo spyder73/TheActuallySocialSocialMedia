@@ -37,3 +37,11 @@ docker compose --env-file .env.pilot -f compose.pilot.yaml down
 ```
 
 Do not use `down --volumes` on a deployment with data you need. Named volumes are persistence, not backups. The bootstrap refuses to overwrite existing configuration so that rerunning it cannot silently rotate database credentials.
+
+## Verification at this checkpoint
+
+- Go tests, race detector and vet passed, including fresh migration, rerun, altered SQL rejection, verified Prisma adoption and rejection of an untracked populated schema against a disposable PostgreSQL instance.
+- Both images build; Compose startup waits for the database, successful migration and healthy API. Readiness returns `{"status":"ready"}` through Caddy. A migration rerun succeeds without replaying applied SQL.
+- Frontend typecheck/build passes. Default production output excludes preview assets; an explicitly enabled build includes them.
+- Browser checks covered desktop and mobile layouts, both themes, source switching, local note creation, empty state, and modal focus restoration. The preview is an early interaction/design checkpoint, not the complete frontend rebuild; photography, real post threads and live evidence are still to come.
+- Public TLS issuance, real-user authentication, Alethea, backup/restore and full VPS deployment are not yet verified.

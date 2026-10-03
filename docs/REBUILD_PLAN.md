@@ -1,6 +1,6 @@
 # TASSM rebuild plan
 
-Status: implementation plan, not a completed deployment.
+Status: Go/container foundation and isolated frontend preview implemented; private pilot still in progress.
 Date: 2026-10-03.
 
 ## Confirmed direction
@@ -139,7 +139,9 @@ The three initial planning reviews used inherited models. Future bounded impleme
 
 ## Current state and remaining inputs
 
-Only this plan has been added; no backend/frontend implementation has started. Current Compose runs PostgreSQL and storage only. Existing accounts already use Argon2 but registration is open and JWT logout has no server-side revocation. The Docker CLI is installed locally, but its daemon was unavailable during this planning review; container validation remains pending.
+The Go health/readiness service, checksum-verified SQL baseline, isolated container foundation and dark/light interactive frontend preview are implemented. See `FOUNDATION.md` for exact scope and commands. Go unit/race/integration checks, container build/startup and browser checks have passed locally. CI checks are defined separately. The preview is excluded from normal production bundles and uses fictional, local-only data.
+
+Invitation accounts, Go social endpoints, private media integration, live Alethea checking, complete API contracts/generated clients, backups and the VPS release rehearsal remain. The original Node accounts still use Argon2 with open registration and JWT logout without server-side revocation; they are not the planned private-pilot authentication system. Docker was started for the local foundation rehearsal; no VPS has been deployed.
 
 Confirmed: invitation-only, standard account security, one small Linux VPS. Provider/domain and off-host backup destination can be supplied at deployment time. Existing data preservation is the default even if the first pilot starts empty.
 
