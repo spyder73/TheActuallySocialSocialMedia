@@ -1,0 +1,54 @@
+openapi: 3.0.3
+info:
+  title: TASSM Go API
+  version: 0.1.0
+  description: Foundation contract. Social and account endpoints are not yet migrated.
+servers:
+  - url: /api
+paths:
+  /healthz:
+    get:
+      operationId: getLiveness
+      summary: Check that the HTTP process is alive
+      responses:
+        '200':
+          description: Process is alive; does not assert database availability
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status]
+                properties:
+                  status:
+                    type: string
+                    enum: [ok]
+  /readyz:
+    get:
+      operationId: getReadiness
+      summary: Check database connectivity
+      responses:
+        '200':
+          description: Database responds to a ping
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status]
+                properties:
+                  status:
+                    type: string
+                    enum: [ready]
+        '503':
+          description: Database is unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, reason]
+                properties:
+                  status:
+                    type: string
+                    enum: [not_ready]
+                  reason:
+                    type: string
+                    enum: [database_unavailable]
