@@ -21,6 +21,7 @@
   letter-spacing: -.01em;
   -webkit-font-smoothing: antialiased;
 }
+.pv-app { --phase-accent: var(--pv-teal); --phase-muted: var(--pv-muted); }
 .pv-app[data-theme="dark"] { color-scheme: dark; --pv-bg: #050607; --pv-panel: #08090b; --pv-raised: #101216; --pv-ink: #f3f4f6; --pv-muted: #a0a4ac; --pv-faint: #777c85; --pv-line: #25282e; --pv-line-strong: #383c44; --pv-teal: #00c8e8; --pv-teal-deep: #47dafa; --pv-teal-soft: #11191d; --pv-on-accent: #031114; --pv-shadow: 0 14px 42px rgba(0,0,0,.38); }
 .pv-app[data-theme="system"] { color-scheme: light; }
 @media (prefers-color-scheme: dark) { .pv-app[data-theme="system"] { color-scheme: dark; --pv-bg: #050607; --pv-panel: #08090b; --pv-raised: #101216; --pv-ink: #f3f4f6; --pv-muted: #a0a4ac; --pv-faint: #777c85; --pv-line: #25282e; --pv-line-strong: #383c44; --pv-teal: #00c8e8; --pv-teal-deep: #47dafa; --pv-teal-soft: #11191d; --pv-on-accent: #031114; --pv-shadow: 0 14px 42px rgba(0,0,0,.38); }.pv-app[data-theme="system"] .pv-sage { background: #22252b; color: #e2e4e8; }.pv-app[data-theme="system"] .pv-clay { background: #22252b; color: #e2e4e8; }.pv-app[data-theme="system"] .pv-blue { background: #22252b; color: #e2e4e8; } }
@@ -33,6 +34,7 @@
 .pv-brand { display: inline-flex; align-items: center; gap: 10px; color: var(--pv-ink); text-decoration: none; font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-weight: 600; font-size: 19px; letter-spacing: -.055em; }
 .pv-app a.pv-brand strong { font-size: 28px; font-weight: 800; line-height: 1; letter-spacing: -.07em; }
 .pv-brand-mark { width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid var(--pv-line-strong); border-radius: 4px; color: var(--pv-teal); font-weight: 800; letter-spacing: -.16em; }
+.pv-brand-mark { padding: 3px; }
 .pv-demo-mark { margin: 12px 0 28px 40px; display: inline-flex; align-items: center; gap: 6px; color: var(--pv-muted); font-size: 11px; letter-spacing: .095em; text-transform: uppercase; }
 .pv-live-dot { width: 6px; height: 6px; border-radius: 50%; background: #bc8f55; }
 .pv-primary-nav { display: grid; gap: 5px; }

@@ -22,6 +22,7 @@
   letter-spacing: -0.01em;
   -webkit-font-smoothing: antialiased;
 }
+.pl-app, .pl-auth { --phase-accent: var(--teal); --phase-muted: var(--muted); }
 .pl-app[data-theme="dark"],
 .pl-auth[data-theme="dark"] {
   color-scheme: dark;
@@ -130,6 +131,9 @@
   color: var(--teal);
   font: 700 11px/1 sans-serif; letter-spacing: -.12em;
 }
+.pl-brand-mark { padding: 3px; }
+.pl-brand-mark .phase-mark-art { color: var(--teal); }
+.pl-sidebar-phase-mark { flex: none; width: 19px; height: 19px; color: var(--teal); }
 .pl-sidebar-caption {
   margin: 13px 0 40px 42px;
   color: var(--muted);

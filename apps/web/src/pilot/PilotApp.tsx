@@ -15,6 +15,7 @@ import {
   useParams,
 } from "react-router-dom";
 import "./pilot.css";
+import { PhaseBanner, PhaseMark } from "../components/PhaseDiagram.js";
 
 type User = {
   id: string;
@@ -337,9 +338,9 @@ function AuthScreen({
     <main className="pl-auth" data-theme="dark">
       <section className="pl-auth-card">
         <Link to="/login" className="pl-brand">
-          <span className="pl-brand-mark">//</span><strong>Phase</strong>
+          <span className="pl-brand-mark"><PhaseMark/></span><strong>Phase</strong>
         </Link>
-        <p className="pl-kicker">A SOCIAL FEED FOR REAL CONVERSATION</p>
+        <p className="pl-kicker">INDIVIDUAL VOICES. COLLECTIVE STATES.</p>
         <h1>{title}</h1>
         <p className="pl-auth-intro">
           A place to follow people, share ideas, and stay in the conversation.
@@ -479,7 +480,7 @@ function Shell({
       <div className="pl-layout">
         <aside className="pl-sidebar">
           <Link to="/" className="pl-brand">
-            <span className="pl-brand-mark">//</span><strong>Phase</strong>
+            <span className="pl-brand-mark"><PhaseMark/></span><strong>Phase</strong>
           </Link>
           <p className="pl-sidebar-caption">
             POSTS FROM YOUR NETWORK
@@ -502,7 +503,7 @@ function Shell({
             ))}
           </nav>
           <div className="pl-sidebar-note">
-            <span aria-hidden="true">//</span>
+            <span className="pl-sidebar-phase-mark" aria-hidden="true"><PhaseMark /></span>
             <p>Posts from your network, in order.</p>
           </div>
           <div className="pl-sidebar-bottom">
@@ -521,7 +522,7 @@ function Shell({
         <main className="pl-main">
           <header className="pl-mobile-head">
             <Link to="/" className="pl-brand">
-              <span className="pl-brand-mark">//</span><strong>Phase</strong>
+              <span className="pl-brand-mark"><PhaseMark/></span><strong>Phase</strong>
             </Link>
             <div className="pl-mobile-head-actions">
               <button
@@ -602,6 +603,7 @@ function PageHeading({
         <h1>{title}</h1>
         <p className="pl-subtitle">{subtitle}</p>
       </div>
+      {title === "Feed" && <PhaseBanner />}
       {action}
     </header>
   );

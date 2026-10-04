@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { demoPosts, type Evidence, type PreviewPost } from "./demoData.js";
+import { PhaseBanner, PhaseMark } from "../components/PhaseDiagram.js";
 import "./preview.css";
 
 type Theme = "system" | "light" | "dark";
@@ -110,7 +111,7 @@ export default function PreviewPage() {
   return <div className="pv-app" data-theme={theme}>
     <div className="pv-frame">
       <aside className="pv-sidebar" aria-label="Main navigation">
-        <a className="pv-brand" href="#feed" aria-label="Phase home"><span className="pv-brand-mark">//</span><strong>Phase</strong></a>
+        <a className="pv-brand" href="#feed" aria-label="Phase home"><span className="pv-brand-mark"><PhaseMark/></span><strong>Phase</strong></a>
         <div className="pv-demo-mark"><span className="pv-live-dot"/> Preview <span>·</span> Demo</div>
         <nav className="pv-primary-nav">
           <a href="#feed" className="active"><Icon name="home"/> <span>Chronological feed</span></a>
@@ -121,8 +122,8 @@ export default function PreviewPage() {
       </aside>
 
       <main id="feed" className="pv-main">
-        <header className="pv-mobile-header"><a className="pv-brand" href="#feed"><span className="pv-brand-mark">//</span><strong>Phase</strong></a><button className="pv-icon-button" aria-label="Open sources" onClick={() => setMobileEvidenceOpen(true)}><Icon name="bookmark"/></button></header>
-        <div className="pv-feed-head"><div><p className="pv-eyebrow">PHASE PREVIEW <span>·</span> POSTS + CONTEXT</p><h1>Feed</h1><p className="pv-subtitle">Posts from your network, with context attached.</p></div><div className="pv-head-actions"><button className="pv-theme-button" aria-label="Change colour theme" title={`Colour theme: ${{ system: "System", light: "Light", dark: "Dark" }[theme]}`} onClick={() => setTheme(theme === "dark" ? "light" : theme === "light" ? "system" : "dark")}><Icon name={theme === "dark" ? "moon" : theme === "light" ? "sun" : "monitor"}/><span>{{ system: "System", light: "Light", dark: "Dark" }[theme]}</span></button><button className="pv-compose-button" onClick={() => setComposeOpen(true)}><Icon name="plus" size={17}/><span>Post</span></button></div></div>
+        <header className="pv-mobile-header"><a className="pv-brand" href="#feed"><span className="pv-brand-mark"><PhaseMark/></span><strong>Phase</strong></a><button className="pv-icon-button" aria-label="Open sources" onClick={() => setMobileEvidenceOpen(true)}><Icon name="bookmark"/></button></header>
+        <div className="pv-feed-head"><div><p className="pv-eyebrow">PHASE PREVIEW <span>·</span> POSTS + CONTEXT</p><h1>Feed</h1><p className="pv-subtitle">Posts from your network, with context attached.</p></div><PhaseBanner/><div className="pv-head-actions"><button className="pv-theme-button" aria-label="Change colour theme" title={`Colour theme: ${{ system: "System", light: "Light", dark: "Dark" }[theme]}`} onClick={() => setTheme(theme === "dark" ? "light" : theme === "light" ? "system" : "dark")}><Icon name={theme === "dark" ? "moon" : theme === "light" ? "sun" : "monitor"}/><span>{{ system: "System", light: "Light", dark: "Dark" }[theme]}</span></button><button className="pv-compose-button" onClick={() => setComposeOpen(true)}><Icon name="plus" size={17}/><span>Post</span></button></div></div>
         <div className="pv-feed-toolbar"><div className="pv-filter-tabs"><button className={!quietMode ? "active" : ""} onClick={() => setQuietMode(false)}>Demo posts <span>{String(posts.length).padStart(2, "0")}</span></button><button className={quietMode ? "active" : ""} onClick={() => setQuietMode(true)}>Empty state</button></div><span className="pv-sort-label">Chronological order</span></div>
         <section className="pv-feed" aria-label="Posts from your network">
           {visiblePosts.length ? visiblePosts.map((post) => <PostCard key={post.id} post={post} selected={post.id === selectedId} onSelect={() => selectPost(post)}/>) : <div className="pv-empty"><span className="pv-empty-icon"><Icon name="phase" size={23}/></span><p className="pv-eyebrow">YOUR FEED</p><h2>No posts yet.</h2><p>Your network is just getting started. Publish the first post.</p><button className="pv-compose-button" onClick={() => setComposeOpen(true)}><Icon name="plus" size={16}/> Write the first post</button></div>}
