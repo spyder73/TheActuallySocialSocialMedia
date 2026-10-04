@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { demoPosts, type Evidence, type PreviewPost } from "./demoData.js";
-import { PhaseBanner, PhaseMark } from "../components/PhaseDiagram.js";
+import { PhaseIdentity, PhaseMark } from "../components/PhaseIdentity.js";
 import "./preview.css";
 
 type Theme = "system" | "light" | "dark";
@@ -117,13 +117,13 @@ export default function PreviewPage() {
           <a href="#feed" className="active"><Icon name="home"/> <span>Chronological feed</span></a>
           <button onClick={openSources}><Icon name="bookmark"/><span>View sources</span></button>
         </nav>
-        <div className="pv-sidebar-rule"/><div className="pv-sidebar-note"><Icon name="phase" size={16}/><p>A feed for people, ideas, and useful context.</p></div>
+        <div className="pv-sidebar-rule"/><div className="pv-sidebar-note"><Icon name="phase" size={16}/><p>Independent voices. Shared space.</p></div>
         <div className="pv-sidebar-bottom"><div className="pv-profile-link"><span className="pv-user-avatar">DE</span><span><strong>Demo account</strong><small>Phase demo</small></span></div></div>
       </aside>
 
       <main id="feed" className="pv-main">
         <header className="pv-mobile-header"><a className="pv-brand" href="#feed"><span className="pv-brand-mark"><PhaseMark/></span><strong>Phase</strong></a><button className="pv-icon-button" aria-label="Open sources" onClick={() => setMobileEvidenceOpen(true)}><Icon name="bookmark"/></button></header>
-        <div className="pv-feed-head"><div><p className="pv-eyebrow">PHASE PREVIEW <span>·</span> POSTS + CONTEXT</p><h1>Feed</h1><p className="pv-subtitle">Posts from your network, with context attached.</p></div><PhaseBanner/><div className="pv-head-actions"><button className="pv-theme-button" aria-label="Change colour theme" title={`Colour theme: ${{ system: "System", light: "Light", dark: "Dark" }[theme]}`} onClick={() => setTheme(theme === "dark" ? "light" : theme === "light" ? "system" : "dark")}><Icon name={theme === "dark" ? "moon" : theme === "light" ? "sun" : "monitor"}/><span>{{ system: "System", light: "Light", dark: "Dark" }[theme]}</span></button><button className="pv-compose-button" onClick={() => setComposeOpen(true)}><Icon name="plus" size={17}/><span>Post</span></button></div></div>
+        <div className="pv-feed-head"><div><p className="pv-eyebrow">PHASE <span>·</span> YOUR NETWORK</p><h1>Feed</h1><p className="pv-subtitle">Your people. Your perspective.</p></div><PhaseIdentity/><div className="pv-head-actions"><button className="pv-theme-button" aria-label="Change colour theme" title={`Colour theme: ${{ system: "System", light: "Light", dark: "Dark" }[theme]}`} onClick={() => setTheme(theme === "dark" ? "light" : theme === "light" ? "system" : "dark")}><Icon name={theme === "dark" ? "moon" : theme === "light" ? "sun" : "monitor"}/><span>{{ system: "System", light: "Light", dark: "Dark" }[theme]}</span></button><button className="pv-compose-button" onClick={() => setComposeOpen(true)}><Icon name="plus" size={17}/><span>Post</span></button></div></div>
         <div className="pv-feed-toolbar"><div className="pv-filter-tabs"><button className={!quietMode ? "active" : ""} onClick={() => setQuietMode(false)}>Demo posts <span>{String(posts.length).padStart(2, "0")}</span></button><button className={quietMode ? "active" : ""} onClick={() => setQuietMode(true)}>Empty state</button></div><span className="pv-sort-label">Chronological order</span></div>
         <section className="pv-feed" aria-label="Posts from your network">
           {visiblePosts.length ? visiblePosts.map((post) => <PostCard key={post.id} post={post} selected={post.id === selectedId} onSelect={() => selectPost(post)}/>) : <div className="pv-empty"><span className="pv-empty-icon"><Icon name="phase" size={23}/></span><p className="pv-eyebrow">YOUR FEED</p><h2>No posts yet.</h2><p>Your network is just getting started. Publish the first post.</p><button className="pv-compose-button" onClick={() => setComposeOpen(true)}><Icon name="plus" size={16}/> Write the first post</button></div>}

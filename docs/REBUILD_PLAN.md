@@ -38,7 +38,7 @@ Alethea stays an optional deployment profile so ordinary social use works withou
 
 ## Visual direction: Phase
 
-A modern, compact social feed whose identity draws on statistical-physics phase diagrams: individual voices forming collective states. Thin boundaries, clustered points, and a restrained scientific visual language express coexistence rather than uniform agreement. Decorative diagrams are conceptual, not measurements of the community.
+A compact social feed with an independent-collective identity: stark monochrome, a distinctive original insignia, bold typography, and a sense of shared space. No physics diagrams, scientific framing, affiliation claims, or implied technical anonymity.
 
 | Element | Initial design specification |
 | --- | --- |
@@ -48,7 +48,7 @@ A modern, compact social feed whose identity draws on statistical-physics phase 
 | Desktop | About 208px navigation, 660–720px feed, optional 280–320px contextual rail; collapse based on available space |
 | Mobile | Full-width feed, bottom navigation, single-view messaging, full-height evidence sheet, safe-area support |
 | Motion | Roughly 120–200ms control feedback and 220–280ms panel transitions; respect reduced motion |
-| Signature | Phase-boundary mark, conceptual point clusters, crisp dividers, dense posts, and “Individual voices. Collective states.” |
+| Signature | Original circular Phase insignia, monochrome identity panel, crisp dividers, and dense posts |
 
 Colors are starting points, subject to contrast testing. All components use semantic tokens; theme preference persists without an initial flash. Use English throughout the product and project: UI, documentation, code comments, examples, fixtures, and default AI responses. Centralize UI labels for future localization.
 

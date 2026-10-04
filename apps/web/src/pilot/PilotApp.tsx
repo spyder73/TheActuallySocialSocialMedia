@@ -15,7 +15,7 @@ import {
   useParams,
 } from "react-router-dom";
 import "./pilot.css";
-import { PhaseBanner, PhaseMark } from "../components/PhaseDiagram.js";
+import { PhaseIdentity, PhaseMark } from "../components/PhaseIdentity.js";
 
 type User = {
   id: string;
@@ -603,7 +603,7 @@ function PageHeading({
         <h1>{title}</h1>
         <p className="pl-subtitle">{subtitle}</p>
       </div>
-      {title === "Feed" && <PhaseBanner />}
+      {title === "Feed" && <PhaseIdentity />}
       {action}
     </header>
   );
